@@ -6,9 +6,13 @@ import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-class ConnectionPool {
+public class ConnectionPool {
     static Connection getConnection() throws SQLException {
         return Pool.POOL.getConnection();
+    }
+
+    public static void close() {
+        Pool.POOL.close();
     }
 
     private static class Pool {
