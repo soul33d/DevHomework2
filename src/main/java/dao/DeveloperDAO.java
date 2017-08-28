@@ -4,10 +4,8 @@ import model.Developer;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DeveloperDAO implements EntityDAO<Developer> {
+public class DeveloperDAO extends EntityDAO<Developer> {
 
     @NotNull
     public Developer read(int id) throws SQLException {
@@ -22,47 +20,14 @@ public class DeveloperDAO implements EntityDAO<Developer> {
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
             }
-            developer.setSkillsIds(readSkillsIds(developer, connection));
-            developer.setCompaniesIds(readCompaniesIds(developer, connection));
-            developer.setProjectsIds(readProjectsIds(developer, connection));
+            developer.setSkillsIds(readIds("SELECT skill_id FROM developers_skills WHERE developer_id = ?",
+                    developer.getId(), connection));
+            developer.setCompaniesIds(readIds("SELECT company_id FROM companies_developers WHERE developer_id = ?",
+                    developer.getId(), connection));
+            developer.setProjectsIds(readIds("SELECT project_id FROM projects_developers WHERE developer_id = ?",
+                    developer.getId(), connection));
             return developer;
         }
-    }
-
-    private List<Integer> readSkillsIds(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("SELECT skill_id FROM developers_skills WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ResultSet rs = ps.executeQuery();
-        List<Integer> skillsIds = new ArrayList<>();
-        while (rs.next()) {
-            skillsIds.add(rs.getInt(1));
-        }
-        return skillsIds;
-    }
-
-    private List<Integer> readCompaniesIds(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("SELECT company_id FROM companies_developers WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ResultSet rs = ps.executeQuery();
-        List<Integer> companiesIds = new ArrayList<>();
-        while (rs.next()) {
-            companiesIds.add(rs.getInt(1));
-        }
-        return companiesIds;
-    }
-
-    private List<Integer> readProjectsIds(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("SELECT project_id FROM projects_developers WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ResultSet rs = ps.executeQuery();
-        List<Integer> projectsIds = new ArrayList<>();
-        while (rs.next()) {
-            projectsIds.add(rs.getInt(1));
-        }
-        return projectsIds;
     }
 
     public void write(@NotNull Developer developer) throws SQLException {
@@ -83,7 +48,7 @@ public class DeveloperDAO implements EntityDAO<Developer> {
                 developer.setId(generatedKeys.getInt(1));
             } else throw new SQLException("Creating developer failed, no id obtained");
 
-            setDeveloperRelationships(developer, connection);
+            setRelationships(developer, connection);
         }
     }
 
@@ -99,59 +64,24 @@ public class DeveloperDAO implements EntityDAO<Developer> {
                 throw new SQLException("Updating developer failed, no rows affected");
             }
 
-            clearSkillsRelationships(developer, connection);
-            clearProjectsRelationships(developer, connection);
-            clearCompaniesRelationships(developer, connection);
+            clearRelationships("DELETE * FROM developers_skills WHERE developer_id = ?",
+                    developer.getId(), connection);
+            clearRelationships("DELETE * FROM projects_developers WHERE developer_id = ?",
+                    developer.getId(), connection);
+            clearRelationships("DELETE  * FROM companies_developers WHERE developer_id = ?",
+                    developer.getId(), connection);
 
-            setDeveloperRelationships(developer, connection);
+            setRelationships(developer, connection);
         }
 
     }
 
-    private void setDeveloperRelationships(Developer developer, Connection connection) throws SQLException {
-        for (Integer skillId : developer.getSkillsIds()) {
-            PreparedStatement ps = connection.prepareStatement
-                    ("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)");
-            ps.setInt(1, developer.getId());
-            ps.setInt(2, skillId);
-            ps.executeUpdate();
-        }
-
-        for (Integer projectId : developer.getProjectsIds()) {
-            PreparedStatement ps = connection.prepareStatement
-                    ("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)");
-            ps.setInt(1, projectId);
-            ps.setInt(2, developer.getId());
-            ps.executeUpdate();
-        }
-
-        for (Integer companyId : developer.getCompaniesIds()) {
-            PreparedStatement ps = connection.prepareStatement
-                    ("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)");
-            ps.setInt(1, companyId);
-            ps.setInt(2, developer.getId());
-            ps.executeUpdate();
-        }
-    }
-
-    private void clearSkillsRelationships(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("DELETE * FROM developers_skills WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ps.executeUpdate();
-    }
-
-    private void clearProjectsRelationships(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("DELETE * FROM projects_developers WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ps.executeUpdate();
-    }
-
-    private void clearCompaniesRelationships(Developer developer, Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement
-                ("DELETE  * FROM companies_developers WHERE developer_id = ?");
-        ps.setInt(1, developer.getId());
-        ps.executeUpdate();
+    private void setRelationships(Developer developer, Connection connection) throws SQLException {
+        setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)",
+                developer.getId(), true, developer.getSkillsIds(), connection);
+        setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)",
+                developer.getId(), false, developer.getProjectsIds(), connection);
+        setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
+                developer.getId(), false, developer.getCompaniesIds(), connection);
     }
 }
