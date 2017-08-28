@@ -51,15 +51,16 @@ public class SkillDAO implements EntityDAO<Skill> {
                 skill.setId(generatedKeys.getInt(1));
             } else throw new SQLException("Creating skill failed, no id obtained");
 
-            setSkillRelationShips(skill, connection);
+            setDeveloperRelationships(skill, connection);
         }
     }
 
-    private void setSkillRelationShips(@NotNull Skill skill, Connection connection) throws SQLException {
+    private void setDeveloperRelationships(@NotNull Skill skill, Connection connection) throws SQLException {
         for (Integer developerId : skill.getDevelopersIds()) {
             PreparedStatement ps = connection.prepareStatement
                     ("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)");
             ps.setInt(developerId, skill.getId());
+            ps.executeUpdate();
         }
     }
 
@@ -75,7 +76,7 @@ public class SkillDAO implements EntityDAO<Skill> {
             }
 
             clearDevelopersRelationships(skill, connection);
-            setSkillRelationShips(skill, connection);
+            setDeveloperRelationships(skill, connection);
         }
     }
 
