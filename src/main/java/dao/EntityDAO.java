@@ -1,13 +1,11 @@
 package dao;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.sql.SQLException;
 
 public interface EntityDAO<T> {
-    @Nullable
-    T read(int id);
-
-    void write(@NotNull T t);
-
-    void update(@NotNull T t);
+    T read(int id) throws SQLException;
+    void write(@NotNull T t) throws SQLException;
+    void update(@NotNull T t) throws SQLException;
 }
