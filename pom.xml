@@ -30,6 +30,11 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.5.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.adedayo.intellij.sdk</groupId>
+            <artifactId>annotations-java8</artifactId>
+            <version>142.1</version>
+        </dependency>
     </dependencies>
 
 
