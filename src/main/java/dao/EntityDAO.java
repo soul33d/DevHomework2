@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityDAO<T> {
+
+    public abstract List<T> readAll() throws SQLException;
     @NotNull
     public abstract T read(int id) throws SQLException;
 
@@ -43,4 +45,6 @@ public abstract class EntityDAO<T> {
         ps.setInt(1, id);
         ps.executeUpdate();
     }
+    public abstract void delete(int id) throws SQLException;
+    public abstract void deleteAll() throws SQLException;
 }
