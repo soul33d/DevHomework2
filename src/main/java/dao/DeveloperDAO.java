@@ -22,14 +22,14 @@ public class DeveloperDAO implements EntityDAO<Developer> {
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
             }
-            readSkills(developer, connection);
-            readCompanies(developer, connection);
-            readProjects(developer, connection);
+            developer.setSkillsIds(readSkillsIds(developer, connection));
+            developer.setCompaniesIds(readCompaniesIds(developer, connection));
+            developer.setProjectsIds(readProjectsIds(developer, connection));
             return developer;
         }
     }
 
-    private void readSkills(Developer developer, Connection connection) throws SQLException {
+    private List<Integer> readSkillsIds(Developer developer, Connection connection) throws SQLException {
         PreparedStatement ps = connection.prepareStatement
                 ("SELECT skill_id FROM developers_skills WHERE developer_id = ?");
         ps.setInt(1, developer.getId());
@@ -38,10 +38,10 @@ public class DeveloperDAO implements EntityDAO<Developer> {
         while (rs.next()) {
             skillsIds.add(rs.getInt(1));
         }
-        developer.setSkillsIds(skillsIds);
+        return skillsIds;
     }
 
-    private void readCompanies(Developer developer, Connection connection) throws SQLException {
+    private List<Integer> readCompaniesIds(Developer developer, Connection connection) throws SQLException {
         PreparedStatement ps = connection.prepareStatement
                 ("SELECT company_id FROM companies_developers WHERE developer_id = ?");
         ps.setInt(1, developer.getId());
@@ -50,10 +50,10 @@ public class DeveloperDAO implements EntityDAO<Developer> {
         while (rs.next()) {
             companiesIds.add(rs.getInt(1));
         }
-        developer.setCompaniesIds(companiesIds);
+        return companiesIds;
     }
 
-    private void readProjects(Developer developer, Connection connection) throws SQLException {
+    private List<Integer> readProjectsIds(Developer developer, Connection connection) throws SQLException {
         PreparedStatement ps = connection.prepareStatement
                 ("SELECT project_id FROM projects_developers WHERE developer_id = ?");
         ps.setInt(1, developer.getId());
@@ -62,6 +62,7 @@ public class DeveloperDAO implements EntityDAO<Developer> {
         while (rs.next()) {
             projectsIds.add(rs.getInt(1));
         }
+        return projectsIds;
     }
 
     public void write(@NotNull Developer developer) throws SQLException {
