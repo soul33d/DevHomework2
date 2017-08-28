@@ -2,12 +2,11 @@ package dao;
 
 import model.Customer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 
 public class CustomerDAO extends EntityDAO<Customer> {
-    @Nullable
+    @NotNull
     public Customer read(int id) throws SQLException {
         Customer customer = new Customer();
         customer.setId(id);

@@ -2,12 +2,11 @@ package dao;
 
 import model.Project;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 
 public class ProjectDAO extends EntityDAO<Project> {
-    @Nullable
+    @NotNull
     public Project read(int id) throws SQLException {
         Project project = new Project();
         project.setId(id);

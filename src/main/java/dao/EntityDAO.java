@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityDAO<T> {
+    @NotNull
     public abstract T read(int id) throws SQLException;
 
     protected List<Integer> readIds(String sql, int id, Connection connection) throws SQLException {
