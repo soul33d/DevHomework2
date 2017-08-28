@@ -1,18 +1,69 @@
 package dao;
 
-import model.Company;
 import model.Developer;
-import model.Project;
-import model.Skill;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeveloperDAO implements EntityDAO<Developer> {
-    public Developer read() {
-        return null;
+
+    @NotNull
+    public Developer read(int id) throws SQLException {
+        Developer developer = new Developer();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM developers WHERE id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                developer.setFirstName(rs.getString("first_name"));
+                developer.setLastName(rs.getString("last_name"));
+                developer.setSalary(rs.getBigDecimal("salary"));
+            }
+            readSkills(id, developer, connection);
+            readCompanies(id, developer, connection);
+            readProjects(id, developer, connection);
+            return developer;
+        }
     }
 
-    public void write(Developer developer) {
+    private void readSkills(int id, Developer developer, Connection connection) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement
+                ("SELECT skill_id FROM developers_skills WHERE developer_id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        List<Integer> skillsIds = new ArrayList<>();
+        while (rs.next()) {
+            skillsIds.add(rs.getInt(1));
+        }
+        developer.setSkillsIds(skillsIds);
+    }
+
+    private void readCompanies(int id, Developer developer, Connection connection) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement
+                ("SELECT company_id FROM companies_developers WHERE developer_id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        List<Integer> companiesIds = new ArrayList<>();
+        while (rs.next()) {
+            companiesIds.add(rs.getInt(1));
+        }
+        developer.setCompaniesIds(companiesIds);
+    }
+
+    private void readProjects(int id, Developer developer, Connection connection) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement
+                ("SELECT project_id FROM projects_developers WHERE developer_id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        List<Integer> projectsIds = new ArrayList<>();
+        while (rs.next()) {
+            projectsIds.add(rs.getInt(1));
+        }
+    }
+
+    public void write(@NotNull Developer developer) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement
                     ("INSERT INTO developers (first_name, last_name, salary) VALUES (?, ?, ?)",
@@ -31,12 +82,10 @@ public class DeveloperDAO implements EntityDAO<Developer> {
             } else throw new SQLException("Creating developer failed, no id obtained");
 
             setDeveloperRelationships(developer, connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void update(Developer developer) {
+    public void update(@NotNull Developer developer) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement
                     ("UPDATE developers SET first_name = ?, last_name = ?, salary = ? WHERE id = ?");
@@ -53,33 +102,31 @@ public class DeveloperDAO implements EntityDAO<Developer> {
             clearCompaniesRelationships(developer, connection);
 
             setDeveloperRelationships(developer, connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
     }
 
     private void setDeveloperRelationships(Developer developer, Connection connection) throws SQLException {
-        for (Skill skill : developer.getSkills()) {
+        for (Integer skillId : developer.getSkillsIds()) {
             PreparedStatement ps = connection.prepareStatement
                     ("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)");
             ps.setInt(1, developer.getId());
-            ps.setInt(2, skill.getId());
+            ps.setInt(2, skillId);
             ps.executeUpdate();
         }
 
-        for (Project project : developer.getProjects()) {
+        for (Integer projectId : developer.getProjectsIds()) {
             PreparedStatement ps = connection.prepareStatement
                     ("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)");
-            ps.setInt(1, project.getId());
+            ps.setInt(1, projectId);
             ps.setInt(2, developer.getId());
             ps.executeUpdate();
         }
 
-        for (Company company : developer.getCompanies()) {
+        for (Integer companyId : developer.getCompaniesIds()) {
             PreparedStatement ps = connection.prepareStatement
                     ("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)");
-            ps.setInt(1, company.getId());
+            ps.setInt(1, companyId);
             ps.setInt(2, developer.getId());
             ps.executeUpdate();
         }
