@@ -8,9 +8,9 @@ public class Developer {
     private String firstName;
     private String lastName;
     private BigDecimal salary;
-    private List<Skill> skills;
-    private List<Project> projects;
-    private List<Company> companies;
+    private List<Integer> skillsIds;
+    private List<Integer> projectsIds;
+    private List<Integer> companiesIds;
 
     public int getId() {
         return id;
@@ -44,27 +44,27 @@ public class Developer {
         this.salary = salary;
     }
 
-    public List<Skill> getSkills() {
-        return skills;
+    public List<Integer> getSkillsIds() {
+        return skillsIds;
     }
 
-    public void setSkills(List<Skill> skills) {
-        this.skills = skills;
+    public void setSkillsIds(List<Integer> skillsIds) {
+        this.skillsIds = skillsIds;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public List<Integer> getProjectsIds() {
+        return projectsIds;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setProjectsIds(List<Integer> projectsIds) {
+        this.projectsIds = projectsIds;
     }
 
-    public List<Company> getCompanies() {
-        return companies;
+    public List<Integer> getCompaniesIds() {
+        return companiesIds;
     }
 
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
+    public void setCompaniesIds(List<Integer> companiesIds) {
+        this.companiesIds = companiesIds;
     }
 }
