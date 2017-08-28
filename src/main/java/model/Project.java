@@ -7,9 +7,9 @@ public class Project {
     private int id;
     private String name;
     private BigDecimal cost;
-    private List<Company> companies;
-    private List<Developer> developers;
-    private List<Customer> customers;
+    private List<Integer> companiesIds;
+    private List<Integer> developersIds;
+    private List<Integer> customersIds;
 
     public int getId() {
         return id;
@@ -35,27 +35,27 @@ public class Project {
         this.cost = cost;
     }
 
-    public List<Company> getCompanies() {
-        return companies;
+    public List<Integer> getCompaniesIds() {
+        return companiesIds;
     }
 
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
+    public void setCompaniesIds(List<Integer> companiesIds) {
+        this.companiesIds = companiesIds;
     }
 
-    public List<Developer> getDevelopers() {
-        return developers;
+    public List<Integer> getDevelopersIds() {
+        return developersIds;
     }
 
-    public void setDevelopers(List<Developer> developers) {
-        this.developers = developers;
+    public void setDevelopersIds(List<Integer> developersIds) {
+        this.developersIds = developersIds;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public List<Integer> getCustomersIds() {
+        return customersIds;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setCustomersIds(List<Integer> customersIds) {
+        this.customersIds = customersIds;
     }
 }

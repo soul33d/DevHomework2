@@ -5,7 +5,7 @@ import java.util.List;
 public class Skill {
     private int id;
     private String name;
-    private List<Developer> developers;
+    private List<Integer> developersIds;
 
     public int getId() {
         return id;
@@ -23,11 +23,11 @@ public class Skill {
         this.name = name;
     }
 
-    public List<Developer> getDevelopers() {
-        return developers;
+    public List<Integer> getDevelopersIds() {
+        return developersIds;
     }
 
-    public void setDevelopers(List<Developer> developers) {
-        this.developers = developers;
+    public void setDevelopersIds(List<Integer> developersIds) {
+        this.developersIds = developersIds;
     }
 }

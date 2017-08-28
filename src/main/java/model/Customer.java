@@ -6,8 +6,8 @@ public class Customer {
     private int id;
     private String firstName;
     private String lastName;
-    private List<Company> companies;
-    private List<Project> projects;
+    private List<Integer> companiesIds;
+    private List<Integer> projectsIds;
 
     public int getId() {
         return id;
@@ -31,5 +31,21 @@ public class Customer {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<Integer> getCompaniesIds() {
+        return companiesIds;
+    }
+
+    public void setCompaniesIds(List<Integer> companiesIds) {
+        this.companiesIds = companiesIds;
+    }
+
+    public List<Integer> getProjectsIds() {
+        return projectsIds;
+    }
+
+    public void setProjectsIds(List<Integer> projectsIds) {
+        this.projectsIds = projectsIds;
     }
 }

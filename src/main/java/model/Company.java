@@ -5,9 +5,9 @@ import java.util.List;
 public class Company {
     private int id;
     private String name;
-    private List<Developer> developers;
-    private List<Project> projects;
-    private List<Customer> customers;
+    private List<Integer> developersIds;
+    private List<Integer> projectsIds;
+    private List<Integer> customersIds;
 
     public int getId() {
         return id;
@@ -25,27 +25,27 @@ public class Company {
         this.name = name;
     }
 
-    public List<Developer> getDevelopers() {
-        return developers;
+    public List<Integer> getDevelopersIds() {
+        return developersIds;
     }
 
-    public void setDevelopers(List<Developer> developers) {
-        this.developers = developers;
+    public void setDevelopersIds(List<Integer> developersIds) {
+        this.developersIds = developersIds;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public List<Integer> getProjectsIds() {
+        return projectsIds;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setProjectsIds(List<Integer> projectsIds) {
+        this.projectsIds = projectsIds;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public List<Integer> getCustomersIds() {
+        return customersIds;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setCustomersIds(List<Integer> customersIds) {
+        this.customersIds = customersIds;
     }
 }
