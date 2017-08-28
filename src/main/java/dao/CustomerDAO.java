@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.*;
 
 public class CustomerDAO extends EntityDAO<Customer> {
+
+    private static final String CUSTOMER_PROJECTS_IDS = "SELECT project_id FROM customers_projects WHERE customer_id = ?";
+
     @NotNull
     public Customer read(int id) throws SQLException {
         Customer customer = new Customer();
@@ -18,8 +21,9 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
             }
-            customer.setProjectsIds(readIds("SELECT project_id FROM customers_projects WHERE customer_id = ?",
-                    id, connection));
+            customer.setCompaniesIds(readIds("SELECT company_id FROM (" + CUSTOMER_PROJECTS_IDS + ") AS cusp " +
+                    "JOIN companies_projects cp ON cusp.project_id = cp.project_id", customer.getId(), connection));
+            customer.setProjectsIds(readIds(CUSTOMER_PROJECTS_IDS, id, connection));
         }
         return customer;
     }
