@@ -4,10 +4,37 @@ import model.Customer;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAO extends EntityDAO<Customer> {
 
     private static final String CUSTOMER_PROJECTS_IDS = "SELECT project_id FROM customers_projects WHERE customer_id = ?";
+
+    @Override
+    public List<Customer> readAll() throws SQLException {
+        List<Customer> customerList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM customers");
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                readAllRelationalIds(customer, connection);
+                customerList.add(customer);
+            }
+        }
+        return customerList;
+    }
+
+    @Override
+    protected void readAllRelationalIds(Customer customer, Connection connection) throws SQLException {
+        customer.setCompaniesIds(readIds("SELECT company_id FROM (" + CUSTOMER_PROJECTS_IDS + ") AS cusp " +
+                "JOIN companies_projects cp ON cusp.project_id = cp.project_id", customer.getId(), connection));
+        customer.setProjectsIds(readIds(CUSTOMER_PROJECTS_IDS, customer.getId(), connection));
+    }
 
     @NotNull
     public Customer read(int id) throws SQLException {
@@ -21,9 +48,7 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
             }
-            customer.setCompaniesIds(readIds("SELECT company_id FROM (" + CUSTOMER_PROJECTS_IDS + ") AS cusp " +
-                    "JOIN companies_projects cp ON cusp.project_id = cp.project_id", customer.getId(), connection));
-            customer.setProjectsIds(readIds(CUSTOMER_PROJECTS_IDS, id, connection));
+            readAllRelationalIds(customer, connection);
         }
         return customer;
     }
@@ -63,9 +88,28 @@ public class CustomerDAO extends EntityDAO<Customer> {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to update customer, no rows affected");
             }
-
-            clearRelationships("DELETE * FROM customers WHERE id = ?", customer.getId(), connection);
+            clearRelationships(customer.getId(), connection);
             setRelationships(customer, connection);
         }
+    }
+
+    @Override
+    protected String deleteQuery() {
+        return "DELETE FROM customers WHERE id = ?";
+    }
+
+    @Override
+    protected String deleteAllQuery() {
+        return "DELETE FROM customers";
+    }
+
+    @Override
+    protected void clearRelationships(int id, Connection connection) throws SQLException {
+        clearRelationships("DELETE FROM customers_projects WHERE customer_id = ?", id, connection);
+    }
+
+    @Override
+    public void deleteAll() throws SQLException {
+
     }
 }

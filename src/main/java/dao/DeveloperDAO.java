@@ -4,8 +4,39 @@ import model.Developer;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeveloperDAO extends EntityDAO<Developer> {
+
+    @Override
+    public List<Developer> readAll() throws SQLException {
+        List<Developer> developerList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM developers");
+            while (rs.next()) {
+                Developer developer = new Developer();
+                developer.setId(rs.getInt("id"));
+                developer.setFirstName(rs.getString("first_name"));
+                developer.setLastName(rs.getString("last_name"));
+                developer.setSalary(rs.getBigDecimal("salary"));
+                readAllRelationalIds(developer, connection);
+                developerList.add(developer);
+            }
+        }
+        return developerList;
+    }
+
+    @Override
+    protected void readAllRelationalIds(Developer developer, Connection connection) throws SQLException {
+        developer.setSkillsIds(readIds("SELECT skill_id FROM developers_skills WHERE developer_id = ?",
+                developer.getId(), connection));
+        developer.setCompaniesIds(readIds("SELECT company_id FROM companies_developers WHERE developer_id = ?",
+                developer.getId(), connection));
+        developer.setProjectsIds(readIds("SELECT project_id FROM projects_developers WHERE developer_id = ?",
+                developer.getId(), connection));
+    }
 
     @NotNull
     public Developer read(int id) throws SQLException {
@@ -20,12 +51,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
             }
-            developer.setSkillsIds(readIds("SELECT skill_id FROM developers_skills WHERE developer_id = ?",
-                    developer.getId(), connection));
-            developer.setCompaniesIds(readIds("SELECT company_id FROM companies_developers WHERE developer_id = ?",
-                    developer.getId(), connection));
-            developer.setProjectsIds(readIds("SELECT project_id FROM projects_developers WHERE developer_id = ?",
-                    developer.getId(), connection));
+            readAllRelationalIds(developer, connection);
             return developer;
         }
     }
@@ -64,15 +90,30 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 throw new SQLException("Updating developer failed, no rows affected");
             }
 
-            clearRelationships("DELETE * FROM developers_skills WHERE developer_id = ?",
-                    developer.getId(), connection);
-            clearRelationships("DELETE * FROM projects_developers WHERE developer_id = ?",
-                    developer.getId(), connection);
-            clearRelationships("DELETE  * FROM companies_developers WHERE developer_id = ?",
-                    developer.getId(), connection);
-
+            clearRelationships(developer.getId(), connection);
             setRelationships(developer, connection);
         }
+    }
+
+    @Override
+    protected String deleteQuery() {
+        return "DELETE FROM developers WHERE id = ?";
+    }
+
+    @Override
+    protected String deleteAllQuery() {
+        return "DELETE FROM developers";
+    }
+
+    @Override
+    protected void clearRelationships(int id, Connection connection) throws SQLException {
+        clearRelationships("DELETE FROM developers_skills WHERE developer_id = ?", id, connection);
+        clearRelationships("DELETE FROM projects_developers WHERE developer_id = ?", id, connection);
+        clearRelationships("DELETE FROM companies_developers WHERE developer_id = ?", id, connection);
+    }
+
+    @Override
+    public void deleteAll() throws SQLException {
 
     }
 

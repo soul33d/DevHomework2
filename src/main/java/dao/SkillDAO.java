@@ -4,8 +4,31 @@ import model.Skill;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SkillDAO extends EntityDAO<Skill> {
+
+    @Override
+    public List<Skill> readAll() throws SQLException {
+        List<Skill> skillList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM skills");
+            while (rs.next()) {
+                Skill skill = new Skill();
+                skill.setId(rs.getInt("id"));
+                skill.setName(rs.getString("name"));
+            }
+        }
+        return skillList;
+    }
+
+    @Override
+    protected void readAllRelationalIds(Skill skill, Connection connection) throws SQLException {
+        skill.setDevelopersIds(readIds("SELECT developer_id FROM developers_skills WHERE skill_id = ?",
+                skill.getId(), connection));
+    }
 
     @NotNull
     public Skill read(int id) throws SQLException {
@@ -18,8 +41,7 @@ public class SkillDAO extends EntityDAO<Skill> {
             if (rs.next()) {
                 skill.setName(rs.getString("name"));
             }
-            skill.setDevelopersIds(readIds("SELECT developer_id FROM developers_skills WHERE skill_id = ?", 
-                    skill.getId(), connection));
+            readAllRelationalIds(skill, connection);
         }
         return skill;
     }
@@ -43,7 +65,7 @@ public class SkillDAO extends EntityDAO<Skill> {
     }
 
     private void setRelationships(@NotNull Skill skill, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(), 
+        setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(),
                 false, skill.getDevelopersIds(), connection);
     }
 
@@ -58,8 +80,28 @@ public class SkillDAO extends EntityDAO<Skill> {
                 throw new SQLException("Failed to update skill, no rows affected");
             }
 
-            clearRelationships("DELETE * FROM developers_skills WHERE skill_id = ?", skill.getId(), connection);
+            clearRelationships(skill.getId(), connection);
             setRelationships(skill, connection);
         }
+    }
+
+    @Override
+    protected String deleteQuery() {
+        return "DELETE FROM skills WHERE id = ?";
+    }
+
+    @Override
+    protected String deleteAllQuery() {
+        return "DELETE FROM skills";
+    }
+
+    @Override
+    protected void clearRelationships(int id, Connection connection) throws SQLException {
+        clearRelationships("DELETE FROM developers_skills WHERE skill_id = ?", id, connection);
+    }
+
+    @Override
+    public void deleteAll() throws SQLException {
+
     }
 }

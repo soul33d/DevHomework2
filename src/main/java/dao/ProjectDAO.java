@@ -4,8 +4,38 @@ import model.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectDAO extends EntityDAO<Project> {
+    @Override
+    public List<Project> readAll() throws SQLException {
+        List<Project> projectList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM projects");
+            while (rs.next()) {
+                Project project = new Project();
+                project.setId(rs.getInt("id"));
+                project.setName(rs.getString("name"));
+                project.setCost(rs.getBigDecimal("cost"));
+                readAllRelationalIds(project, connection);
+                projectList.add(project);
+            }
+        }
+        return projectList;
+    }
+
+    @Override
+    protected void readAllRelationalIds(Project project, Connection connection) throws SQLException {
+        project.setCompaniesIds(readIds("SELECT company_id FROM companies_projects WHERE project_id = ?",
+                project.getId(), connection));
+        project.setCustomersIds(readIds("SELECT customer_id FROM customers_projects WHERE project_id = ?",
+                project.getId(), connection));
+        project.setDevelopersIds(readIds("SELECT developer_id FROM projects_developers WHERE project_id = ?",
+                project.getId(), connection));
+    }
+
     @NotNull
     public Project read(int id) throws SQLException {
         Project project = new Project();
@@ -18,12 +48,7 @@ public class ProjectDAO extends EntityDAO<Project> {
                 project.setName(rs.getString("name"));
                 project.setCost(rs.getBigDecimal("cost"));
             }
-            project.setCompaniesIds(readIds("SELECT company_id FROM companies_projects WHERE project_id = ?",
-                    project.getId(), connection));
-            project.setCustomersIds(readIds("SELECT customer_id FROM customers_projects WHERE project_id = ?",
-                    project.getId(), connection));
-            project.setDevelopersIds(readIds("SELECT developer_id FROM projects_developers WHERE project_id = ?",
-                    project.getId(), connection));
+            readAllRelationalIds(project, connection);
         }
         return project;
     }
@@ -68,11 +93,30 @@ public class ProjectDAO extends EntityDAO<Project> {
                 throw new SQLException("Failed to update project, no rows affected");
             }
 
-            clearRelationships("DELETE * FROM companies_projects WHERE project_id = ?", project.getId(), connection);
-            clearRelationships("DELETE * FROM customers_projects WHERE project_id = ?", project.getId(), connection);
-            clearRelationships("DELETE * FROM projects_developers WHERE project_id = ?", project.getId(), connection);
-
+            clearRelationships(project.getId(), connection);
             setRelationships(project, connection);
         }
+    }
+
+    @Override
+    protected String deleteQuery() {
+        return "DELETE FROM projects WHERE id = ?";
+    }
+
+    @Override
+    protected String deleteAllQuery() {
+        return "DELETE FROM projects";
+    }
+
+    @Override
+    protected void clearRelationships(int id, Connection connection) throws SQLException {
+        clearRelationships("DELETE FROM companies_projects WHERE project_id = ?", id, connection);
+        clearRelationships("DELETE FROM customers_projects WHERE project_id = ?", id, connection);
+        clearRelationships("DELETE FROM projects_developers WHERE project_id = ?", id, connection);
+    }
+
+    @Override
+    public void deleteAll() throws SQLException {
+
     }
 }

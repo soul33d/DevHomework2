@@ -2,16 +2,18 @@ package dao;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityDAO<T> {
 
+    private static final String FAILED_TO_DELETE_MSG = "Failed to delete, no rows affected";
+
     public abstract List<T> readAll() throws SQLException;
+
+    protected abstract void readAllRelationalIds(T t, Connection connection) throws SQLException;
+
     @NotNull
     public abstract T read(int id) throws SQLException;
 
@@ -45,6 +47,32 @@ public abstract class EntityDAO<T> {
         ps.setInt(1, id);
         ps.executeUpdate();
     }
-    public abstract void delete(int id) throws SQLException;
-    public abstract void deleteAll() throws SQLException;
+
+    public void delete(int id) throws SQLException {
+        try (Connection connection = ConnectionPool.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(deleteQuery());
+            ps.setInt(1, id);
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException(FAILED_TO_DELETE_MSG);
+            }
+        }
+    }
+
+    protected abstract String deleteQuery();
+
+    protected abstract String deleteAllQuery();
+
+    protected abstract void clearRelationships(int id, Connection connection) throws SQLException;
+
+    public void deleteAll() throws SQLException {
+        try (Connection connection = ConnectionPool.getConnection()) {
+            Statement statement = connection.createStatement();
+            int affectedRows = statement.executeUpdate(deleteAllQuery());
+            if (affectedRows == 0) {
+                throw new SQLException(FAILED_TO_DELETE_MSG);
+            }
+
+        }
+    }
 }
