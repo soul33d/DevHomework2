@@ -1,12 +1,13 @@
 package view;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class TerminalHelper {
     private Scanner scanner;
 
-    public TerminalHelper() {
-        scanner = new Scanner(System.in);
+    public TerminalHelper(InputStream stream) {
+        scanner = new Scanner(stream);
     }
 
     public int readIntFromInput(String msg) {
