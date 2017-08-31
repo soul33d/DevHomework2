@@ -12,10 +12,14 @@ public class TerminalHelper {
 
     public int readIntFromInput(String msg) {
         if (msg.length() > 0) System.out.println(msg);
+        return readIntFromInput(msg);
+    }
+
+    public int readIntFromInput() {
         if (scanner.hasNextInt()) return scanner.nextInt();
         scanner.next();
         System.out.println("Incorrect input, please enter an integer.");
-        return readIntFromInput(msg);
+        return readIntFromInput();
     }
 
     public String readStringFromInput(String msg) {
