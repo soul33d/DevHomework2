@@ -9,7 +9,7 @@ import java.util.List;
 public class EntityController<T> {
     private EntityDAO<T> entityDAO;
 
-    public EntityController(EntityDAO<T> entityDAO) {
+    public EntityController(@NotNull EntityDAO<T> entityDAO) {
         this.entityDAO = entityDAO;
     }
 
