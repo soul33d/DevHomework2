@@ -1,9 +1,11 @@
 package view;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
-public class TerminalHelper {
+public class TerminalHelper implements Closeable {
     private Scanner scanner;
 
     public TerminalHelper(InputStream stream) {
@@ -34,5 +36,10 @@ public class TerminalHelper {
         scanner.next();
         System.out.println("Incorrect input. Please enter double.");
         return readDoubleFromInput(msg);
+    }
+
+    @Override
+    public void close() throws IOException {
+        scanner.close();
     }
 }
