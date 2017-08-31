@@ -8,23 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AppController {
-    private Map<Class, EntityDAO> entitiesDAO;
+    private Map<Class, EntityController> controllers;
 
+    @SuppressWarnings("unchecked")
     public AppController() {
-        entitiesDAO = new HashMap<>();
-        entitiesDAO.put(Developer.class, new DeveloperDAO());
-        entitiesDAO.put(Skill.class, new SkillDAO());
-        entitiesDAO.put(Company.class, new CompanyDAO());
-        entitiesDAO.put(Project.class, new ProjectDAO());
-        entitiesDAO.put(Customer.class, new CustomerDAO());
+        controllers = new HashMap<>();
+        controllers.put(Developer.class, new EntityController(new DeveloperDAO()));
+        controllers.put(Skill.class, new EntityController(new SkillDAO()));
+        controllers.put(Company.class, new EntityController(new CompanyDAO()));
+        controllers.put(Project.class, new EntityController(new ProjectDAO()));
+        controllers.put(Customer.class, new EntityController(new CustomerDAO()));
     }
 
     @SuppressWarnings("unchecked")
-    public <T> EntityDAO<T> getEntityDAO(@NotNull Class<T> clazz) {
-        return entitiesDAO.get(clazz);
+    public <T> EntityController<T> getEntityController(@NotNull Class<T> clazz) {
+        return controllers.get(clazz);
     }
 
-    public void close() {
+    public void closeApp() {
         ConnectionPool.close();
+        System.exit(0);
     }
 }
