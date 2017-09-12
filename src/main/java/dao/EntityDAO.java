@@ -1,5 +1,9 @@
 package dao;
 
+import model.Company;
+import model.Customer;
+import model.Developer;
+import model.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -12,25 +16,90 @@ public abstract class EntityDAO<T> {
 
     public abstract List<T> readAll() throws SQLException;
 
-    protected abstract void readAllRelationalIds(T t, Connection connection) throws SQLException;
+    protected abstract void readAllRelationalEntities(T t, Connection connection) throws SQLException;
+
+    List<Developer> readDevelopers(String sql, int id, Connection connection) {
+        List<Developer> developerList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Developer developer = new Developer();
+                developer.setId(rs.getInt("id"));
+                developer.setFirstName(rs.getString("first_name"));
+                developer.setLastName(rs.getString("last_name"));
+                developer.setSalary(rs.getBigDecimal("salary"));
+                developerList.add(developer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return developerList;
+    }
+
+    List<Project> readProjects(String sql, int id, Connection connection) {
+        List<Project> projectList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Project project = new Project();
+                project.setId(rs.getInt("id"));
+                project.setName(rs.getString("name"));
+                project.setCost(rs.getBigDecimal("cost"));
+                projectList.add(project);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return projectList;
+    }
+
+    List<Customer> readCustomers(String sql, int id, Connection connection) {
+        List<Customer> customerList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                customerList.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    List<Company> readCompanies(String sql, int id, Connection connection) {
+        List<Company> companyList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Company company = new Company();
+                company.setId(rs.getInt(id));
+                company.setName(rs.getString("name"));
+                companyList.add(company);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return companyList;
+    }
 
     @NotNull
     public abstract T read(int id) throws SQLException;
 
-    protected List<Integer> readIds(String sql, int id, Connection connection) throws SQLException {
-        List<Integer> ids = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            ids.add(rs.getInt(1));
-        }
-        return ids;
-    }
-
     public abstract void write(@NotNull T t) throws SQLException;
 
-    protected void setRelationships
+    void setRelationships
             (String sql, int id, boolean entityIdFirst, List<Integer> ids, Connection connection) throws SQLException {
         for (Integer relationId : ids) {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -42,7 +111,7 @@ public abstract class EntityDAO<T> {
 
     public abstract void update(@NotNull T t) throws SQLException;
 
-    protected void clearRelationships(String sql, int id, Connection connection) throws SQLException {
+    void clearRelationships(String sql, int id, Connection connection) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();

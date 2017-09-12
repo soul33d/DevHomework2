@@ -1,11 +1,13 @@
 package dao;
 
+import model.Developer;
 import model.Skill;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkillDAO extends EntityDAO<Skill> {
 
@@ -25,9 +27,10 @@ public class SkillDAO extends EntityDAO<Skill> {
     }
 
     @Override
-    protected void readAllRelationalIds(Skill skill, Connection connection) throws SQLException {
-        skill.setDevelopersIds(readIds("SELECT developer_id FROM developers_skills WHERE skill_id = ?",
-                skill.getId(), connection));
+    protected void readAllRelationalEntities(Skill skill, Connection connection) throws SQLException {
+        skill.setDevelopers(readDevelopers("SELECT * FROM developers d " +
+                "JOIN (SELECT developer_id FROM developers_skills WHERE skill_id = ?) AS ds " +
+                "ON ds.developer_id = d.id", skill.getId(), connection));
     }
 
     @NotNull
@@ -41,7 +44,7 @@ public class SkillDAO extends EntityDAO<Skill> {
             if (rs.next()) {
                 skill.setName(rs.getString("name"));
             }
-            readAllRelationalIds(skill, connection);
+            readAllRelationalEntities(skill, connection);
         }
         return skill;
     }
@@ -64,9 +67,11 @@ public class SkillDAO extends EntityDAO<Skill> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Skill skill, Connection connection) throws SQLException {
         setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(),
-                false, skill.getDevelopersIds(), connection);
+                false,
+                skill.getDevelopers().stream().map(Developer::getId).collect(Collectors.toList()), connection);
     }
 
     public void update(@NotNull Skill skill) throws SQLException {

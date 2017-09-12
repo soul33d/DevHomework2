@@ -1,15 +1,15 @@
 package dao;
 
 import model.Customer;
+import model.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomerDAO extends EntityDAO<Customer> {
-
-    private static final String CUSTOMER_PROJECTS_IDS = "SELECT project_id FROM customers_projects WHERE customer_id = ?";
 
     @Override
     public List<Customer> readAll() throws SQLException {
@@ -22,7 +22,7 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.setId(rs.getInt("id"));
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
-                readAllRelationalIds(customer, connection);
+                readAllRelationalEntities(customer, connection);
                 customerList.add(customer);
             }
         }
@@ -30,10 +30,16 @@ public class CustomerDAO extends EntityDAO<Customer> {
     }
 
     @Override
-    protected void readAllRelationalIds(Customer customer, Connection connection) throws SQLException {
-        customer.setCompaniesIds(readIds("SELECT company_id FROM (" + CUSTOMER_PROJECTS_IDS + ") AS cusp " +
-                "JOIN companies_projects cp ON cusp.project_id = cp.project_id", customer.getId(), connection));
-        customer.setProjectsIds(readIds(CUSTOMER_PROJECTS_IDS, customer.getId(), connection));
+    protected void readAllRelationalEntities(Customer customer, Connection connection) throws SQLException {
+        customer.setCompanies(readCompanies("SELECT * FROM companies c " +
+                        "JOIN (SELECT company_id FROM " +
+                        "(SELECT project_id FROM customers_projects WHERE customer_id = ?) AS cusp " +
+                        "JOIN companies_projects cp ON cusp.project_id = cp.project_id) AS cc ON cc.company_id = c.id",
+                customer.getId(), connection));
+        customer.setProjects(readProjects("SELECT * FROM projects p " +
+                        "JOIN (SELECT project_id FROM customers_projects WHERE customer_id = ?) AS cp " +
+                        "ON cp.project_id = p.id",
+                customer.getId(), connection));
     }
 
     @NotNull
@@ -48,7 +54,7 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
             }
-            readAllRelationalIds(customer, connection);
+            readAllRelationalEntities(customer, connection);
         }
         return customer;
     }
@@ -72,9 +78,11 @@ public class CustomerDAO extends EntityDAO<Customer> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Customer customer, Connection connection) throws SQLException {
         setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)",
-                customer.getId(), true, customer.getProjectsIds(), connection);
+                customer.getId(), true,
+                customer.getProjects().stream().map(Project::getId).collect(Collectors.toList()), connection);
     }
 
     public void update(@NotNull Customer customer) throws SQLException {

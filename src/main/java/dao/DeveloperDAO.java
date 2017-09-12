@@ -1,11 +1,15 @@
 package dao;
 
+import model.Company;
 import model.Developer;
+import model.Project;
+import model.Skill;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DeveloperDAO extends EntityDAO<Developer> {
 
@@ -21,7 +25,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 developer.setFirstName(rs.getString("first_name"));
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
-                readAllRelationalIds(developer, connection);
+                readAllRelationalEntities(developer, connection);
                 developerList.add(developer);
             }
         }
@@ -29,13 +33,36 @@ public class DeveloperDAO extends EntityDAO<Developer> {
     }
 
     @Override
-    protected void readAllRelationalIds(Developer developer, Connection connection) throws SQLException {
-        developer.setSkillsIds(readIds("SELECT skill_id FROM developers_skills WHERE developer_id = ?",
-                developer.getId(), connection));
-        developer.setCompaniesIds(readIds("SELECT company_id FROM companies_developers WHERE developer_id = ?",
-                developer.getId(), connection));
-        developer.setProjectsIds(readIds("SELECT project_id FROM projects_developers WHERE developer_id = ?",
-                developer.getId(), connection));
+    protected void readAllRelationalEntities(Developer developer, Connection connection) throws SQLException {
+        int id = developer.getId();
+        developer.setSkills(readSkills(id, connection));
+        developer.setCompanies(readCompanies("SELECT * FROM companies c " +
+                "JOIN (SELECT company_id FROM companies_developers WHERE developer_id = ?) AS cd " +
+                "ON cd.company_id = c.id", id, connection));
+        developer.setProjects(readProjects("SELECT * FROM projects p " +
+                "JOIN (SELECT project_id FROM projects_developers WHERE developer_id = ?) AS pd " +
+                "ON pd.project_id = p.id", id, connection));
+    }
+
+    private List<Skill> readSkills(int id, Connection connection) {
+        List<Skill> skillList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement
+                    ("SELECT * FROM skills s JOIN " +
+                            "(SELECT skill_id FROM developers_skills WHERE developer_id = ?) AS ds " +
+                            "ON ds.skill_id = s.id");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Skill skill = new Skill();
+                skill.setId(rs.getInt("id"));
+                skill.setName(rs.getString("name"));
+                skillList.add(skill);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return skillList;
     }
 
     @NotNull
@@ -51,7 +78,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
             }
-            readAllRelationalIds(developer, connection);
+            readAllRelationalEntities(developer, connection);
             return developer;
         }
     }
@@ -117,12 +144,16 @@ public class DeveloperDAO extends EntityDAO<Developer> {
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void setRelationships(Developer developer, Connection connection) throws SQLException {
         setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)",
-                developer.getId(), true, developer.getSkillsIds(), connection);
+                developer.getId(), true,
+                developer.getSkills().stream().map(Skill::getId).collect(Collectors.toList()), connection);
         setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)",
-                developer.getId(), false, developer.getProjectsIds(), connection);
+                developer.getId(), false,
+                developer.getProjects().stream().map(Project::getId).collect(Collectors.toList()), connection);
         setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
-                developer.getId(), false, developer.getCompaniesIds(), connection);
+                developer.getId(), false,
+                developer.getCompanies().stream().map(Company::getId).collect(Collectors.toList()), connection);
     }
 }

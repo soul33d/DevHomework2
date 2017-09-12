@@ -1,11 +1,15 @@
 package dao;
 
+import model.Company;
+import model.Customer;
+import model.Developer;
 import model.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectDAO extends EntityDAO<Project> {
     @Override
@@ -19,7 +23,7 @@ public class ProjectDAO extends EntityDAO<Project> {
                 project.setId(rs.getInt("id"));
                 project.setName(rs.getString("name"));
                 project.setCost(rs.getBigDecimal("cost"));
-                readAllRelationalIds(project, connection);
+                readAllRelationalEntities(project, connection);
                 projectList.add(project);
             }
         }
@@ -27,12 +31,17 @@ public class ProjectDAO extends EntityDAO<Project> {
     }
 
     @Override
-    protected void readAllRelationalIds(Project project, Connection connection) throws SQLException {
-        project.setCompaniesIds(readIds("SELECT company_id FROM companies_projects WHERE project_id = ?",
+    protected void readAllRelationalEntities(Project project, Connection connection) throws SQLException {
+        project.setCompanies(readCompanies("SELECT * FROM companies c " +
+                "JOIN (SELECT company_id FROM companies_projects WHERE project_id = ?) AS cp " +
+                "ON cp.company_id = c.id", project.getId(), connection));
+        project.setCustomers(readCustomers("SELECT * FROM customers c " +
+                        "JOIN (SELECT customer_id FROM customers_projects WHERE project_id = ?) AS cp " +
+                        "ON cp.customer_id = c.id",
                 project.getId(), connection));
-        project.setCustomersIds(readIds("SELECT customer_id FROM customers_projects WHERE project_id = ?",
-                project.getId(), connection));
-        project.setDevelopersIds(readIds("SELECT developer_id FROM projects_developers WHERE project_id = ?",
+        project.setDevelopers(readDevelopers("SELECT * FROM developers d " +
+                        "JOIN (SELECT developer_id FROM projects_developers WHERE project_id = ?) AS pd " +
+                        "ON pd.developer_id = d.id",
                 project.getId(), connection));
     }
 
@@ -48,7 +57,7 @@ public class ProjectDAO extends EntityDAO<Project> {
                 project.setName(rs.getString("name"));
                 project.setCost(rs.getBigDecimal("cost"));
             }
-            readAllRelationalIds(project, connection);
+            readAllRelationalEntities(project, connection);
         }
         return project;
     }
@@ -72,13 +81,17 @@ public class ProjectDAO extends EntityDAO<Project> {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Project project, Connection connection) throws SQLException {
         setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)", project.getId(),
-                false, project.getCompaniesIds(), connection);
+                false,
+                project.getCompanies().stream().map(Company::getId).collect(Collectors.toList()), connection);
         setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)", project.getId(),
-                true, project.getDevelopersIds(), connection);
+                true,
+                project.getDevelopers().stream().map(Developer::getId).collect(Collectors.toList()), connection);
         setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)", project.getId(),
-                false, project.getCustomersIds(), connection);
+                false,
+                project.getCustomers().stream().map(Customer::getId).collect(Collectors.toList()), connection);
     }
 
     public void update(@NotNull Project project) throws SQLException {
