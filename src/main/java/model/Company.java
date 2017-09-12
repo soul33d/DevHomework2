@@ -60,9 +60,18 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder("Company{id=");
+        sb.append(id).append(", name='").append(name).append("\'\n");
+        if (developers != null) {
+            developers.forEach(developer -> sb.append("\t").append(developer).append(";\n"));
+        }
+        if (projects != null) {
+            projects.forEach(project -> sb.append("\t").append(project).append(";\n"));
+        }
+        if (customers != null) {
+            customers.forEach(customer -> sb.append("\t").append(customer).append(";\n"));
+        }
+        sb.append("}");
+        return sb.toString();
     }
 }
