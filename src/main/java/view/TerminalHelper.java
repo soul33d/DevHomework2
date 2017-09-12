@@ -14,7 +14,7 @@ public class TerminalHelper implements Closeable {
 
     public int readIntFromInput(String msg) {
         if (msg.length() > 0) System.out.println(msg);
-        return readIntFromInput(msg);
+        return readIntFromInput();
     }
 
     public int readIntFromInput() {
