@@ -74,7 +74,7 @@ public abstract class EntityDAO<T> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return customerList;
     }
 
     List<Company> readCompanies(String sql, int id, Connection connection) {
