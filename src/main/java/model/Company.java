@@ -57,4 +57,12 @@ public class Company {
     public void setCustomers(@Nullable List<Customer> customers) {
         this.customers = customers;
     }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

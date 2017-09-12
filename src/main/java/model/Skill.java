@@ -35,4 +35,12 @@ public class Skill {
     public void setDevelopers(@Nullable List<Developer> developers) {
         this.developers = developers;
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

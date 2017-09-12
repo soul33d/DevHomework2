@@ -55,4 +55,13 @@ public class Customer {
     public void setProjects(@Nullable List<Project> projects) {
         this.projects = projects;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }

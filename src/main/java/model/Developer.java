@@ -76,4 +76,14 @@ public class Developer {
     public void setCompanies(@Nullable List<Company> companies) {
         this.companies = companies;
     }
+
+    @Override
+    public String toString() {
+        return "Developer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
 }
