@@ -5,6 +5,7 @@ import model.Developer;
 import model.Project;
 import model.Skill;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -65,15 +66,16 @@ public class DeveloperDAO extends EntityDAO<Developer> {
         return skillList;
     }
 
-    @NotNull
+    @Nullable
     public Developer read(int id) throws SQLException {
-        Developer developer = new Developer();
-        developer.setId(id);
+        Developer developer = null;
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM developers WHERE id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                developer = new Developer();
+                developer.setId(id);
                 developer.setFirstName(rs.getString("first_name"));
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));

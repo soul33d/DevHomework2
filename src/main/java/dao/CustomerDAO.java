@@ -3,6 +3,7 @@ package dao;
 import model.Customer;
 import model.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,15 +43,16 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.getId(), connection));
     }
 
-    @NotNull
+    @Nullable
     public Customer read(int id) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(id);
+        Customer customer = null;
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM customers WHERE id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                customer = new Customer();
+                customer.setId(id);
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
             }

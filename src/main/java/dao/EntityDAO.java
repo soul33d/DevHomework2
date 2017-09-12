@@ -5,6 +5,7 @@ import model.Customer;
 import model.Developer;
 import model.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public abstract class EntityDAO<T> {
         return companyList;
     }
 
-    @NotNull
+    @Nullable
     public abstract T read(int id) throws SQLException;
 
     public abstract void write(@NotNull T t) throws SQLException;

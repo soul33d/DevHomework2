@@ -4,6 +4,7 @@ import model.Company;
 import model.Developer;
 import model.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,15 +46,16 @@ public class CompanyDAO extends EntityDAO<Company> {
                 company.getId(), connection));
     }
 
-    @NotNull
+    @Nullable
     public Company read(int id) throws SQLException {
-        Company company = new Company();
-        company.setId(id);
+        Company company = null;
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM companies WHERE  id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                company = new Company();
+                company.setId(id);
                 company.setName(rs.getString("name"));
             }
             readAllRelationalEntities(company, connection);

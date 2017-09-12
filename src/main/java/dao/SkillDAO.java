@@ -3,6 +3,7 @@ package dao;
 import model.Developer;
 import model.Skill;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,15 +34,16 @@ public class SkillDAO extends EntityDAO<Skill> {
                 "ON ds.developer_id = d.id", skill.getId(), connection));
     }
 
-    @NotNull
+    @Nullable
     public Skill read(int id) throws SQLException {
-        Skill skill = new Skill();
-        skill.setId(id);
+        Skill skill = null;
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM skills WHERE id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                skill = new Skill();
+                skill.setId(id);
                 skill.setName(rs.getString("name"));
             }
             readAllRelationalEntities(skill, connection);

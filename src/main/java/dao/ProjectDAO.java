@@ -5,6 +5,7 @@ import model.Customer;
 import model.Developer;
 import model.Project;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,15 +46,16 @@ public class ProjectDAO extends EntityDAO<Project> {
                 project.getId(), connection));
     }
 
-    @NotNull
+    @Nullable
     public Project read(int id) throws SQLException {
-        Project project = new Project();
-        project.setId(id);
+        Project project = null;
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM projects WHERE id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                project = new Project();
+                project.setId(id);
                 project.setName(rs.getString("name"));
                 project.setCost(rs.getBigDecimal("cost"));
             }
