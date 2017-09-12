@@ -32,9 +32,10 @@ public class CompanyDAO extends EntityDAO<Company> {
 
     @Override
     protected void readAllRelationalEntities(Company company, Connection connection) throws SQLException {
-        company.setCustomers(readCustomers("SELECT customer_id FROM " +
+        company.setCustomers(readCustomers("SELECT * FROM customers c JOIN (SELECT customer_id FROM " +
                         "(SELECT project_id FROM companies_projects WHERE company_id = ?) AS cp " +
-                        "JOIN customers_projects cusp ON cp.project_id = cusp.project_id",
+                        "JOIN customers_projects cusp ON cp.project_id = cusp.project_id) as cc " +
+                        "ON c.id = cc.customer_id",
                 company.getId(), connection));
         company.setDevelopers(readDevelopers("SELECT * FROM developers d " +
                         "JOIN (SELECT developer_id FROM companies_developers WHERE company_id = ?) AS cd " +
