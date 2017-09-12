@@ -1,5 +1,7 @@
 package model;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -7,9 +9,13 @@ public class Project {
     private int id;
     private String name;
     private BigDecimal cost;
-    private List<Integer> companiesIds;
-    private List<Integer> developersIds;
-    private List<Integer> customersIds;
+
+    @Nullable
+    private List<Company> companies;
+    @Nullable
+    private List<Developer> developers;
+    @Nullable
+    private List<Customer> customers;
 
     public int getId() {
         return id;
@@ -35,27 +41,30 @@ public class Project {
         this.cost = cost;
     }
 
-    public List<Integer> getCompaniesIds() {
-        return companiesIds;
+    @Nullable
+    public List<Company> getCompanies() {
+        return companies;
     }
 
-    public void setCompaniesIds(List<Integer> companiesIds) {
-        this.companiesIds = companiesIds;
+    public void setCompanies(@Nullable List<Company> companies) {
+        this.companies = companies;
     }
 
-    public List<Integer> getDevelopersIds() {
-        return developersIds;
+    @Nullable
+    public List<Developer> getDevelopers() {
+        return developers;
     }
 
-    public void setDevelopersIds(List<Integer> developersIds) {
-        this.developersIds = developersIds;
+    public void setDevelopers(@Nullable List<Developer> developers) {
+        this.developers = developers;
     }
 
-    public List<Integer> getCustomersIds() {
-        return customersIds;
+    @Nullable
+    public List<Customer> getCustomers() {
+        return customers;
     }
 
-    public void setCustomersIds(List<Integer> customersIds) {
-        this.customersIds = customersIds;
+    public void setCustomers(@Nullable List<Customer> customers) {
+        this.customers = customers;
     }
 }

@@ -1,11 +1,15 @@
 package model;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class Skill {
     private int id;
     private String name;
-    private List<Integer> developersIds;
+
+    @Nullable
+    private List<Developer> developers;
 
     public int getId() {
         return id;
@@ -23,11 +27,12 @@ public class Skill {
         this.name = name;
     }
 
-    public List<Integer> getDevelopersIds() {
-        return developersIds;
+    @Nullable
+    public List<Developer> getDevelopers() {
+        return developers;
     }
 
-    public void setDevelopersIds(List<Integer> developersIds) {
-        this.developersIds = developersIds;
+    public void setDevelopers(@Nullable List<Developer> developers) {
+        this.developers = developers;
     }
 }

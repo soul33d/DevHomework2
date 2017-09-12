@@ -1,13 +1,19 @@
 package model;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class Company {
     private int id;
     private String name;
-    private List<Integer> developersIds;
-    private List<Integer> projectsIds;
-    private List<Integer> customersIds;
+
+    @Nullable
+    private List<Developer> developers;
+    @Nullable
+    private List<Project> projects;
+    @Nullable
+    private List<Customer> customers;
 
     public int getId() {
         return id;
@@ -25,27 +31,30 @@ public class Company {
         this.name = name;
     }
 
-    public List<Integer> getDevelopersIds() {
-        return developersIds;
+    @Nullable
+    public List<Developer> getDevelopers() {
+        return developers;
     }
 
-    public void setDevelopersIds(List<Integer> developersIds) {
-        this.developersIds = developersIds;
+    public void setDevelopers(@Nullable List<Developer> developers) {
+        this.developers = developers;
     }
 
-    public List<Integer> getProjectsIds() {
-        return projectsIds;
+    @Nullable
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    public void setProjectsIds(List<Integer> projectsIds) {
-        this.projectsIds = projectsIds;
+    public void setProjects(@Nullable List<Project> projects) {
+        this.projects = projects;
     }
 
-    public List<Integer> getCustomersIds() {
-        return customersIds;
+    @Nullable
+    public List<Customer> getCustomers() {
+        return customers;
     }
 
-    public void setCustomersIds(List<Integer> customersIds) {
-        this.customersIds = customersIds;
+    public void setCustomers(@Nullable List<Customer> customers) {
+        this.customers = customers;
     }
 }
