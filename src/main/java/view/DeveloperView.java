@@ -3,16 +3,12 @@ package view;
 import controller.EntityController;
 import model.Developer;
 
-public class DeveloperView extends View {
+import java.util.List;
 
-    private EntityController<Developer> controller;
+public class DeveloperView extends EntityView<Developer> {
 
-    public DeveloperView(TerminalHelper terminalHelper) {
-        super(terminalHelper);
-    }
-
-    public DeveloperView(TerminalHelper terminalHelper, EntityController<Developer> controller) {
-        super(terminalHelper);
+    public DeveloperView(MainView mainView, EntityController<Developer> controller, TerminalHelper terminalHelper) {
+        super(mainView, controller, terminalHelper);
         this.controller = controller;
     }
 
@@ -24,5 +20,11 @@ public class DeveloperView extends View {
     @Override
     protected void selectMenuAction() {
 
+    }
+
+    @Override
+    protected void printAll() {
+        List<Developer> developers = controller.readAll();
+        developers.forEach(System.out::println);
     }
 }

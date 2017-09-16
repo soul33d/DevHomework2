@@ -3,17 +3,10 @@ package view;
 import controller.EntityController;
 import model.Customer;
 
-public class CustomerView extends View {
+public class CustomerView extends EntityView<Customer> {
 
-    private EntityController<Customer> controller;
-
-    public CustomerView(TerminalHelper terminalHelper) {
-        super(terminalHelper);
-    }
-
-    public CustomerView(TerminalHelper terminalHelper, EntityController<Customer> controller) {
-        super(terminalHelper);
-        this.controller = controller;
+    public CustomerView(MainView mainView, EntityController<Customer> controller, TerminalHelper terminalHelper) {
+        super(mainView, controller, terminalHelper);
     }
 
     @Override
@@ -23,6 +16,11 @@ public class CustomerView extends View {
 
     @Override
     protected void selectMenuAction() {
+
+    }
+
+    @Override
+    protected void printAll() {
 
     }
 }

@@ -3,17 +3,10 @@ package view;
 import controller.EntityController;
 import model.Skill;
 
-public class SkillView extends View {
+public class SkillView extends EntityView<Skill> {
 
-    private EntityController<Skill> controller;
-
-    public SkillView(TerminalHelper terminalHelper) {
-        super(terminalHelper);
-    }
-
-    public SkillView(TerminalHelper terminalHelper, EntityController<Skill> controller) {
-        super(terminalHelper);
-        this.controller = controller;
+    public SkillView(MainView mainView, EntityController<Skill> controller, TerminalHelper terminalHelper) {
+        super(mainView, controller, terminalHelper);
     }
 
     @Override
@@ -23,6 +16,11 @@ public class SkillView extends View {
 
     @Override
     protected void selectMenuAction() {
+
+    }
+
+    @Override
+    protected void printAll() {
 
     }
 }

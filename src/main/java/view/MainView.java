@@ -4,6 +4,8 @@ import controller.AppController;
 import model.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainView extends View {
 
@@ -15,21 +17,22 @@ public class MainView extends View {
     private static final int EXIT_KEY = 0;
 
     private AppController controller;
-
-    private View companyView;
-    private View customerView;
-    private View projectView;
-    private View developerView;
-    private View skillView;
+    private Map<Class, EntityView> viewMap;
 
     public MainView() {
         super(new TerminalHelper(System.in));
         controller = new AppController();
-        companyView = new CompanyView(terminalHelper, controller.getEntityController(Company.class));
-        customerView = new CustomerView(terminalHelper, controller.getEntityController(Customer.class));
-        projectView = new ProjectView(terminalHelper, controller.getEntityController(Project.class));
-        developerView = new DeveloperView(terminalHelper, controller.getEntityController(Developer.class));
-        skillView = new SkillView(terminalHelper, controller.getEntityController(Skill.class));
+        viewMap = new HashMap<>();
+        viewMap.put(Company.class,
+                new CompanyView(this, controller.getEntityController(Company.class), terminalHelper));
+        viewMap.put(Customer.class,
+                new CustomerView(this, controller.getEntityController(Customer.class), terminalHelper));
+        viewMap.put(Project.class,
+                new ProjectView(this, controller.getEntityController(Project.class), terminalHelper));
+        viewMap.put(Developer.class,
+                new DeveloperView(this, controller.getEntityController(Developer.class), terminalHelper));
+        viewMap.put(Skill.class,
+                new SkillView(this, controller.getEntityController(Skill.class), terminalHelper));
     }
 
     @Override
@@ -42,6 +45,10 @@ public class MainView extends View {
         System.out.printf("Press %d to exit.\n", EXIT_KEY);
     }
 
+    void printAll(Class clazz) {
+        viewMap.get(clazz).printAll();
+    }
+
     private void printMenuItem(int actionKey, String menuName) {
         System.out.printf("Press %d to show %s menu.\n", actionKey, menuName);
     }
@@ -51,19 +58,19 @@ public class MainView extends View {
         int enteredInteger = terminalHelper.readIntFromInput();
         switch (enteredInteger) {
             case COMPANY_KEY:
-                companyView.execute();
+                viewMap.get(Company.class).execute();
                 break;
             case CUSTOMER_KEY:
-                customerView.execute();
+                viewMap.get(Customer.class).execute();
                 break;
             case PROJECT_KEY:
-                projectView.execute();
+                viewMap.get(Project.class).execute();
                 break;
             case DEVELOPER_KEY:
-                developerView.execute();
+                viewMap.get(Developer.class).execute();
                 break;
             case SKILL_KEY:
-                skillView.execute();
+                viewMap.get(Skill.class).execute();
                 break;
             case EXIT_KEY:
                 exitApp();
