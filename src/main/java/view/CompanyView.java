@@ -89,10 +89,24 @@ public class CompanyView extends EntityView<Company> {
     }
 
     private void deleteCompany() {
-
+        int enteredInteger = terminalHelper.readIntFromInput("Enter id to delete company");
+        controller.delete(enteredInteger);
     }
 
     private void deleteAllCompanies() {
-
+        String answer = terminalHelper.readStringFromInput
+                ("Are you sure you want to delete all companies? y/n");
+        switch (answer) {
+            case "y":
+                if (controller.deleteAll()) {
+                    System.out.println("All companies successfully deleted.");
+                }
+                break;
+            case "n":
+                break;
+            default:
+                deleteAllCompanies();
+                break;
+        }
     }
 }
