@@ -7,10 +7,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class EntityController<T> {
+    private AppController appController;
     private EntityDAO<T> entityDAO;
 
-    public EntityController(@NotNull EntityDAO<T> entityDAO) {
+    public EntityController(@NotNull AppController appController, @NotNull EntityDAO<T> entityDAO) {
+        this.appController = appController;
         this.entityDAO = entityDAO;
+    }
+
+    public <E>EntityController<E> getEntityController(Class<E> clazz) {
+        return appController.getEntityController(clazz);
     }
 
     public List<T> readAll() {
