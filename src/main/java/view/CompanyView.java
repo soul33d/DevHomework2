@@ -103,6 +103,8 @@ public class CompanyView extends EntityView<Company> {
                 updateView.setCompany(company);
                 updateView.execute();
                 controller.update(company);
+            } else {
+                System.out.printf("There is no company with id %d\n", enteredId);
             }
             enteredId = terminalHelper.readIntFromInput();
         }
@@ -234,6 +236,8 @@ public class CompanyView extends EntityView<Company> {
                     break;
                 case CHANGE_NAME_KEY:
                     company.setName(terminalHelper.readStringFromInput("Enter new name"));
+                    System.out.println("Successfully changed.");
+                    break;
                 default:
                     System.out.printf("There is no action for %d\n", enteredAction);
                     selectMenuAction();

@@ -59,7 +59,7 @@ public class CompanyDAO extends EntityDAO<Company> {
                 company.setId(id);
                 company.setName(rs.getString("name"));
             }
-            readAllRelationalEntities(company, connection);
+            if (company != null) readAllRelationalEntities(company, connection);
         }
         return company;
     }
