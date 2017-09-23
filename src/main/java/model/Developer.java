@@ -79,11 +79,20 @@ public class Developer {
 
     @Override
     public String toString() {
-        return "Developer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", salary=" + salary +
-                '}';
+        StringBuilder sb = new StringBuilder("Developer{");
+        sb.append("id=").append(id).append(", firstName='").append(firstName).append('\'')
+                .append(", lastName='").append(lastName).append('\'')
+                .append(", salary=").append(salary).append("\'\n");
+        if (skills != null) {
+            skills.forEach(skill -> sb.append('\t').append(skill).append(";\n"));
+        }
+        if (projects != null) {
+            projects.forEach(project -> sb.append('\t').append(project).append(";\n"));
+        }
+        if (companies != null) {
+            companies.forEach(company -> sb.append('\t').append(company).append(";\n"));
+        }
+        sb.append('}');
+        return sb.toString();
     }
 }
