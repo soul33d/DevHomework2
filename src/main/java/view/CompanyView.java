@@ -2,7 +2,10 @@ package view;
 
 import controller.EntityController;
 import model.Company;
+import model.Developer;
+import model.Project;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyView extends EntityView<Company> {
@@ -15,9 +18,11 @@ public class CompanyView extends EntityView<Company> {
     private static final int BACK_TO_MAIN_MENU_KEY = 7;
 
     private boolean backToMainMenu = false;
+    private ChildView childView;
 
-    public CompanyView(MainView mainView, EntityController<Company> controller, TerminalHelper terminalHelper) {
-        super(mainView, controller, terminalHelper);
+    public CompanyView(EntityController<Company> controller, TerminalHelper terminalHelper) {
+        super(controller, terminalHelper);
+        childView = new ChildView(terminalHelper);
     }
 
     @Override
@@ -81,10 +86,17 @@ public class CompanyView extends EntityView<Company> {
     private void createCompany() {
         Company company = new Company();
         company.setName(terminalHelper.readStringFromInput("Enter company name"));
-        
+        childView.setCompany(company);
+        childView.execute();
+        controller.write(company);
     }
 
     private void updateCompany() {
+        printAll();
+        int enteredId = terminalHelper.readIntFromInput("Enter id of company to update or '0' to finish");
+        while (enteredId != 0) {
+            controller.read(enteredId);
+        }
 
     }
 
@@ -107,6 +119,80 @@ public class CompanyView extends EntityView<Company> {
             default:
                 deleteAllCompanies();
                 break;
+        }
+    }
+
+    private class ChildView extends View {
+        private static final int ADD_DEVELOPERS_KEY = 1;
+        private static final int ADD_PROJECTS_KEY = 2;
+        private static final int FINISH_CREATION_KEY = 0;
+
+        private Company company;
+
+        private ChildView(TerminalHelper terminalHelper) {
+            super(terminalHelper);
+        }
+
+        @Override
+        protected void printMenu() {
+            System.out.printf("Press %d to add developers to company\n", ADD_DEVELOPERS_KEY);
+            System.out.printf("Press %d to add projects to company,\n", ADD_PROJECTS_KEY);
+            System.out.printf("Press %d to finish company creation\n", FINISH_CREATION_KEY);
+        }
+
+        @Override
+        protected void selectMenuAction() {
+            int enteredAction = terminalHelper.readIntFromInput();
+            switch (enteredAction) {
+                case ADD_DEVELOPERS_KEY:
+                    addDevelopers();
+                    break;
+                case ADD_PROJECTS_KEY:
+                    addProjects();
+                    break;
+                case FINISH_CREATION_KEY:
+                    break;
+                default:
+                    System.out.printf("There is no action for %d", enteredAction);
+                    selectMenuAction();
+                    break;
+            }
+        }
+
+        private void addDevelopers() {
+            EntityController<Developer> developerController = controller.getEntityController(Developer.class);
+            developerController.readAll().forEach(System.out::println);
+            int enteredId = terminalHelper.readIntFromInput("Enter id to add developer or enter '0' to finish");
+            List<Developer> developers = new ArrayList<>();
+            while (enteredId != 0) {
+                Developer developer = developerController.read(enteredId);
+                if (developer != null) {
+                    developers.add(developer);
+                    System.out.println(developer + "\n Successfully added.");
+                } else System.out.printf("There is no developer with id %d\n", enteredId);
+                enteredId = terminalHelper.readIntFromInput();
+            }
+            company.setDevelopers(developers);
+        }
+
+        private void addProjects() {
+            EntityController<Project> projectController = controller.getEntityController(Project.class);
+            projectController.readAll().forEach(System.out::println);
+            int enteredId = terminalHelper.readIntFromInput("Enter id to add project or enter '0' to finish");
+            List<Project> projects = new ArrayList<>();
+            while (enteredId != 0) {
+                Project project = projectController.read(enteredId);
+                if (project != null) {
+                    projects.add(project);
+                    System.out.println(project + "\n Successfully added.");
+                } else System.out.printf("There is no project with id %d\n", enteredId);
+                enteredId = terminalHelper.readIntFromInput();
+            }
+            company.setProjects(projects);
+        }
+
+        public void setCompany(Company company) {
+            this.company = company;
         }
     }
 }

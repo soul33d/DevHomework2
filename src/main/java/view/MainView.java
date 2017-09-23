@@ -24,15 +24,15 @@ public class MainView extends View {
         controller = new AppController();
         viewMap = new HashMap<>();
         viewMap.put(Company.class,
-                new CompanyView(this, controller.getEntityController(Company.class), terminalHelper));
+                new CompanyView(controller.getEntityController(Company.class), terminalHelper));
         viewMap.put(Customer.class,
-                new CustomerView(this, controller.getEntityController(Customer.class), terminalHelper));
+                new CustomerView(controller.getEntityController(Customer.class), terminalHelper));
         viewMap.put(Project.class,
-                new ProjectView(this, controller.getEntityController(Project.class), terminalHelper));
+                new ProjectView(controller.getEntityController(Project.class), terminalHelper));
         viewMap.put(Developer.class,
-                new DeveloperView(this, controller.getEntityController(Developer.class), terminalHelper));
+                new DeveloperView(controller.getEntityController(Developer.class), terminalHelper));
         viewMap.put(Skill.class,
-                new SkillView(this, controller.getEntityController(Skill.class), terminalHelper));
+                new SkillView(controller.getEntityController(Skill.class), terminalHelper));
     }
 
     @Override
@@ -43,10 +43,6 @@ public class MainView extends View {
         printMenuItem(DEVELOPER_KEY, "developer");
         printMenuItem(SKILL_KEY, "skill");
         System.out.printf("Press %d to exit.\n", EXIT_KEY);
-    }
-
-    void printAll(Class clazz) {
-        viewMap.get(clazz).printAll();
     }
 
     private void printMenuItem(int actionKey, String menuName) {

@@ -7,8 +7,8 @@ import java.util.List;
 
 public class DeveloperView extends EntityView<Developer> {
 
-    public DeveloperView(MainView mainView, EntityController<Developer> controller, TerminalHelper terminalHelper) {
-        super(mainView, controller, terminalHelper);
+    public DeveloperView(EntityController<Developer> controller, TerminalHelper terminalHelper) {
+        super(controller, terminalHelper);
         this.controller = controller;
     }
 

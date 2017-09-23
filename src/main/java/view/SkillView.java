@@ -5,8 +5,8 @@ import model.Skill;
 
 public class SkillView extends EntityView<Skill> {
 
-    public SkillView(MainView mainView, EntityController<Skill> controller, TerminalHelper terminalHelper) {
-        super(mainView, controller, terminalHelper);
+    public SkillView(EntityController<Skill> controller, TerminalHelper terminalHelper) {
+        super(controller, terminalHelper);
     }
 
     @Override

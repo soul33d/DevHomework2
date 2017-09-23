@@ -5,8 +5,8 @@ import model.Customer;
 
 public class CustomerView extends EntityView<Customer> {
 
-    public CustomerView(MainView mainView, EntityController<Customer> controller, TerminalHelper terminalHelper) {
-        super(mainView, controller, terminalHelper);
+    public CustomerView(EntityController<Customer> controller, TerminalHelper terminalHelper) {
+        super(controller, terminalHelper);
     }
 
     @Override

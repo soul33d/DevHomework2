@@ -5,8 +5,8 @@ import model.Project;
 
 public class ProjectView extends EntityView<Project> {
 
-    public ProjectView(MainView mainView, EntityController<Project> controller, TerminalHelper terminalHelper) {
-        super(mainView, controller, terminalHelper);
+    public ProjectView(EntityController<Project> controller, TerminalHelper terminalHelper) {
+        super(controller, terminalHelper);
     }
 
     @Override
