@@ -70,10 +70,20 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", cost=" + cost +
-                '}';
+        StringBuilder sb = new StringBuilder("Project{");
+        sb.append("id=").append(id)
+                .append(", name='").append(name).append('\'')
+                .append(", cost=").append(cost).append("\"\n");
+        if (companies != null) {
+            companies.forEach(company -> sb.append('\t').append(company).append(";\n"));
+        }
+        if (developers != null) {
+            developers.forEach(developer -> sb.append("\t").append(developer).append(";\n"));
+        }
+        if (customers != null) {
+            customers.forEach(customer -> sb.append("\t").append(customer).append(";\n"));
+        }
+        sb.append('}');
+        return  sb.toString();
     }
 }
