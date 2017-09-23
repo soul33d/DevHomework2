@@ -1,6 +1,7 @@
 package view;
 
 import controller.EntityController;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EntityView<T> extends View {
     protected static final int PRINT_ALL_KEY = 1;
@@ -14,9 +15,6 @@ public abstract class EntityView<T> extends View {
     protected EntityController<T> controller;
     protected boolean backToMainMenu = false;
 
-    protected String singularEntityName;
-    protected String pluralEntityName;
-
     public EntityView(EntityController<T> controller, TerminalHelper terminalHelper) {
         super(terminalHelper);
         this.controller = controller;
@@ -24,12 +22,12 @@ public abstract class EntityView<T> extends View {
 
     @Override
     protected void printMenu() {
-        System.out.printf("Press %d to print all %s\n", PRINT_ALL_KEY, pluralEntityName);
-        System.out.printf("Press %d to print %s by id\n", PRINT_ENTITY_KEY, singularEntityName);
-        System.out.printf("Press %d to create new %s\n", CREATE_KEY, singularEntityName);
-        System.out.printf("Press %d to update %s by id\n", UPDATE_KEY, singularEntityName);
-        System.out.printf("Press %d to delete %s by id\n", DELETE_KEY, singularEntityName);
-        System.out.printf("Press %d to delete all %s\n", DELETE_ALL_KEY, pluralEntityName);
+        System.out.printf("Press %d to print all %s\n", PRINT_ALL_KEY, pluralEntityName());
+        System.out.printf("Press %d to print %s by id\n", PRINT_ENTITY_KEY, singularEntityName());
+        System.out.printf("Press %d to create new %s\n", CREATE_KEY, singularEntityName());
+        System.out.printf("Press %d to update %s by id\n", UPDATE_KEY, singularEntityName());
+        System.out.printf("Press %d to delete %s by id\n", DELETE_KEY, singularEntityName());
+        System.out.printf("Press %d to delete all %s\n", DELETE_ALL_KEY, pluralEntityName());
         System.out.printf("Press %d to back to main menu\n", BACK_TO_MAIN_MENU_KEY);
     }
 
@@ -77,4 +75,10 @@ public abstract class EntityView<T> extends View {
     protected abstract void deleteEntity();
 
     protected abstract void deleteAll();
+
+    @NotNull
+    protected abstract String singularEntityName();
+
+    @NotNull
+    protected abstract String pluralEntityName();
 }

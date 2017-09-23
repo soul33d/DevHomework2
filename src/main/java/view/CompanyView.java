@@ -4,6 +4,7 @@ import controller.EntityController;
 import model.Company;
 import model.Developer;
 import model.Project;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,6 @@ public class CompanyView extends EntityView<Company> {
         super(controller, terminalHelper);
         createView = new CreateView(terminalHelper);
         updateView = new UpdateView(terminalHelper);
-        singularEntityName = "company";
-        pluralEntityName = "companies";
     }
 
     @Override
@@ -92,6 +91,18 @@ public class CompanyView extends EntityView<Company> {
                 deleteAll();
                 break;
         }
+    }
+
+    @NotNull
+    @Override
+    protected String singularEntityName() {
+        return "company";
+    }
+
+    @NotNull
+    @Override
+    protected String pluralEntityName() {
+        return "companies";
     }
 
     private class CreateView extends View {
