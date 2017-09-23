@@ -76,6 +76,7 @@ public class CompanyView extends EntityView<Company> {
         List<Company> companies = controller.readAll();
         if (companies != null) {
             companies.forEach(System.out::println);
+            if (companies.isEmpty()) System.out.println("There is no companies in your database.");
         }
     }
 
@@ -96,8 +97,8 @@ public class CompanyView extends EntityView<Company> {
     private void updateCompany() {
         printAll();
         Company company;
-        int enteredId = terminalHelper.readIntFromInput("Enter id of company to update or '0' to finish");
-        while (enteredId != 0) {
+        int enteredId = terminalHelper.readIntFromInput("Enter id of company to update or '0' to complete");
+        if (enteredId != 0) {
             company = controller.read(enteredId);
             if (company != null) {
                 updateView.setCompany(company);
@@ -106,11 +107,12 @@ public class CompanyView extends EntityView<Company> {
             } else {
                 System.out.printf("There is no company with id %d\n", enteredId);
             }
-            enteredId = terminalHelper.readIntFromInput();
+            updateCompany();
         }
     }
 
     private void deleteCompany() {
+        printAll();
         int enteredInteger = terminalHelper.readIntFromInput("Enter id to delete company or '0' to complete.");
         if (enteredInteger != 0) {
             controller.delete(enteredInteger);
@@ -130,6 +132,7 @@ public class CompanyView extends EntityView<Company> {
             case "n":
                 break;
             default:
+                System.out.printf("There is no action for %s\n", answer);
                 deleteAllCompanies();
                 break;
         }
