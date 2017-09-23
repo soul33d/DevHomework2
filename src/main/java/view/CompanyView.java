@@ -111,8 +111,11 @@ public class CompanyView extends EntityView<Company> {
     }
 
     private void deleteCompany() {
-        int enteredInteger = terminalHelper.readIntFromInput("Enter id to delete company");
-        controller.delete(enteredInteger);
+        int enteredInteger = terminalHelper.readIntFromInput("Enter id to delete company or '0' to complete.");
+        if (enteredInteger != 0) {
+            controller.delete(enteredInteger);
+            deleteCompany();
+        }
     }
 
     private void deleteAllCompanies() {
