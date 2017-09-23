@@ -58,10 +58,12 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder("Customer{id=");
+        sb.append(id).append(", firstName='").append(firstName).append("\'")
+                .append(", lastName='").append(lastName).append("\'\n");
+        if (companies != null) companies.forEach(c -> sb.append("\t").append(c).append(";\n"));
+        if (projects != null) projects.forEach(p -> sb.append("\t").append(p).append(";\n"));
+        sb.append("}");
+        return sb.toString();
     }
 }
