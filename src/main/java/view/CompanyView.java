@@ -18,11 +18,13 @@ public class CompanyView extends EntityView<Company> {
     private static final int BACK_TO_MAIN_MENU_KEY = 7;
 
     private boolean backToMainMenu = false;
-    private ChildView childView;
+    private CreateView createView;
+    private UpdateView updateView;
 
     public CompanyView(EntityController<Company> controller, TerminalHelper terminalHelper) {
         super(controller, terminalHelper);
-        childView = new ChildView(terminalHelper);
+        createView = new CreateView(terminalHelper);
+        updateView = new UpdateView(terminalHelper);
     }
 
     @Override
@@ -86,18 +88,24 @@ public class CompanyView extends EntityView<Company> {
     private void createCompany() {
         Company company = new Company();
         company.setName(terminalHelper.readStringFromInput("Enter company name"));
-        childView.setCompany(company);
-        childView.execute();
+        createView.setCompany(company);
+        createView.execute();
         controller.write(company);
     }
 
     private void updateCompany() {
         printAll();
+        Company company;
         int enteredId = terminalHelper.readIntFromInput("Enter id of company to update or '0' to finish");
         while (enteredId != 0) {
-            controller.read(enteredId);
+            company = controller.read(enteredId);
+            if (company != null) {
+                updateView.setCompany(company);
+                updateView.execute();
+                controller.update(company);
+            }
+            enteredId = terminalHelper.readIntFromInput();
         }
-
     }
 
     private void deleteCompany() {
@@ -122,22 +130,22 @@ public class CompanyView extends EntityView<Company> {
         }
     }
 
-    private class ChildView extends View {
-        private static final int ADD_DEVELOPERS_KEY = 1;
-        private static final int ADD_PROJECTS_KEY = 2;
-        private static final int FINISH_CREATION_KEY = 0;
+    private class CreateView extends View {
+        static final int ADD_DEVELOPERS_KEY = 1;
+        static final int ADD_PROJECTS_KEY = 2;
+        static final int COMPLETE_CREATION_KEY = 0;
 
-        private Company company;
+        Company company;
 
-        private ChildView(TerminalHelper terminalHelper) {
+        private CreateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
         @Override
         protected void printMenu() {
+            System.out.printf("Press %d to complete\n", COMPLETE_CREATION_KEY);
             System.out.printf("Press %d to add developers to company\n", ADD_DEVELOPERS_KEY);
             System.out.printf("Press %d to add projects to company,\n", ADD_PROJECTS_KEY);
-            System.out.printf("Press %d to finish company creation\n", FINISH_CREATION_KEY);
         }
 
         @Override
@@ -150,7 +158,7 @@ public class CompanyView extends EntityView<Company> {
                 case ADD_PROJECTS_KEY:
                     addProjects();
                     break;
-                case FINISH_CREATION_KEY:
+                case COMPLETE_CREATION_KEY:
                     break;
                 default:
                     System.out.printf("There is no action for %d", enteredAction);
@@ -159,26 +167,26 @@ public class CompanyView extends EntityView<Company> {
             }
         }
 
-        private void addDevelopers() {
+        void addDevelopers() {
             EntityController<Developer> developerController = controller.getEntityController(Developer.class);
             developerController.readAll().forEach(System.out::println);
-            int enteredId = terminalHelper.readIntFromInput("Enter id to add developer or enter '0' to finish");
+            int enteredId = terminalHelper.readIntFromInput("Enter id to add developer or enter '0' to complete");
             List<Developer> developers = new ArrayList<>();
             while (enteredId != 0) {
                 Developer developer = developerController.read(enteredId);
                 if (developer != null) {
                     developers.add(developer);
-                    System.out.println(developer + "\n Successfully added.");
+                    System.out.println(developer + "\n Successfully added. Press '0' to complete.");
                 } else System.out.printf("There is no developer with id %d\n", enteredId);
                 enteredId = terminalHelper.readIntFromInput();
             }
             company.setDevelopers(developers);
         }
 
-        private void addProjects() {
+        void addProjects() {
             EntityController<Project> projectController = controller.getEntityController(Project.class);
             projectController.readAll().forEach(System.out::println);
-            int enteredId = terminalHelper.readIntFromInput("Enter id to add project or enter '0' to finish");
+            int enteredId = terminalHelper.readIntFromInput("Enter id to add project or enter '0' to complete");
             List<Project> projects = new ArrayList<>();
             while (enteredId != 0) {
                 Project project = projectController.read(enteredId);
@@ -193,6 +201,44 @@ public class CompanyView extends EntityView<Company> {
 
         public void setCompany(Company company) {
             this.company = company;
+        }
+    }
+
+    private class UpdateView extends CreateView {
+
+        private static final int CHANGE_NAME_KEY = 3;
+
+        private UpdateView(TerminalHelper terminalHelper) {
+            super(terminalHelper);
+        }
+
+        @Override
+        protected void printMenu() {
+            super.printMenu();
+            System.out.printf("Press %d to change company name", CHANGE_NAME_KEY);
+        }
+
+        @Override
+        protected void selectMenuAction() {
+            int enteredAction = terminalHelper.readIntFromInput();
+            switch (enteredAction) {
+                case ADD_DEVELOPERS_KEY:
+                    System.out.println("After completing previous developers will be cleared!");
+                    addDevelopers();
+                    break;
+                case ADD_PROJECTS_KEY:
+                    System.out.println("After completing previous projects will be cleared!");
+                    addProjects();
+                    break;
+                case COMPLETE_CREATION_KEY:
+                    break;
+                case CHANGE_NAME_KEY:
+                    company.setName(terminalHelper.readStringFromInput("Enter new name"));
+                default:
+                    System.out.printf("There is no action for %d", enteredAction);
+                    selectMenuAction();
+                    break;
+            }
         }
     }
 }
