@@ -80,11 +80,13 @@ public class CustomerDAO extends EntityDAO<Customer> {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Customer customer, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)",
-                customer.getId(), true,
-                customer.getProjects().stream().map(Project::getId).collect(Collectors.toList()), connection);
+        List<Project> projects = customer.getProjects();
+        if (projects != null) {
+            setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)",
+                    customer.getId(), true,
+                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+        }
     }
 
     public void update(@NotNull Customer customer) throws SQLException {

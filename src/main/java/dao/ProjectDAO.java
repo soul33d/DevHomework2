@@ -83,17 +83,25 @@ public class ProjectDAO extends EntityDAO<Project> {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Project project, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)", project.getId(),
-                false,
-                project.getCompanies().stream().map(Company::getId).collect(Collectors.toList()), connection);
-        setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)", project.getId(),
-                true,
-                project.getDevelopers().stream().map(Developer::getId).collect(Collectors.toList()), connection);
-        setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)", project.getId(),
-                false,
-                project.getCustomers().stream().map(Customer::getId).collect(Collectors.toList()), connection);
+        List<Company> companies = project.getCompanies();
+        if (companies != null) {
+            setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)", project.getId(),
+                    false,
+                    companies.stream().map(Company::getId).collect(Collectors.toList()), connection);
+        }
+        List<Developer> developers = project.getDevelopers();
+        if (developers != null) {
+            setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)", project.getId(),
+                    true,
+                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+        }
+        List<Customer> customers = project.getCustomers();
+        if (customers != null) {
+            setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)", project.getId(),
+                    false,
+                    customers.stream().map(Customer::getId).collect(Collectors.toList()), connection);
+        }
     }
 
     public void update(@NotNull Project project) throws SQLException {

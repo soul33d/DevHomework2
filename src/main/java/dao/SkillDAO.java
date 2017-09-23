@@ -69,11 +69,13 @@ public class SkillDAO extends EntityDAO<Skill> {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Skill skill, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(),
-                false,
-                skill.getDevelopers().stream().map(Developer::getId).collect(Collectors.toList()), connection);
+        List<Developer> developers = skill.getDevelopers();
+        if (developers != null) {
+            setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(),
+                    false,
+                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+        }
     }
 
     public void update(@NotNull Skill skill) throws SQLException {

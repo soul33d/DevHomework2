@@ -146,16 +146,24 @@ public class DeveloperDAO extends EntityDAO<Developer> {
 
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void setRelationships(Developer developer, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)",
-                developer.getId(), true,
-                developer.getSkills().stream().map(Skill::getId).collect(Collectors.toList()), connection);
-        setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)",
-                developer.getId(), false,
-                developer.getProjects().stream().map(Project::getId).collect(Collectors.toList()), connection);
-        setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
-                developer.getId(), false,
-                developer.getCompanies().stream().map(Company::getId).collect(Collectors.toList()), connection);
+        List<Skill> skills = developer.getSkills();
+        if (skills != null) {
+            setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)",
+                    developer.getId(), true,
+                    skills.stream().map(Skill::getId).collect(Collectors.toList()), connection);
+        }
+        List<Project> projects = developer.getProjects();
+        if (projects != null) {
+            setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)",
+                    developer.getId(), false,
+                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+        }
+        List<Company> companies = developer.getCompanies();
+        if (companies != null) {
+            setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
+                    developer.getId(), false,
+                    companies.stream().map(Company::getId).collect(Collectors.toList()), connection);
+        }
     }
 }

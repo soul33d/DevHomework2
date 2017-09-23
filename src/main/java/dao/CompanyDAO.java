@@ -82,14 +82,19 @@ public class CompanyDAO extends EntityDAO<Company> {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void setRelationships(@NotNull Company company, Connection connection) throws SQLException {
-        setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
-                company.getId(), true,
-                company.getDevelopers().stream().map(Developer::getId).collect(Collectors.toList()), connection);
-        setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)",
-                company.getId(), true,
-                company.getProjects().stream().map(Project::getId).collect(Collectors.toList()), connection);
+        List<Developer> developers = company.getDevelopers();
+        if (developers != null) {
+            setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
+                    company.getId(), true,
+                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+        }
+        List<Project> projects = company.getProjects();
+        if (projects != null) {
+            setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)",
+                    company.getId(), true,
+                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+        }
     }
 
     public void update(@NotNull Company company) throws SQLException {
