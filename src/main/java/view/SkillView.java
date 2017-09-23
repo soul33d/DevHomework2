@@ -11,11 +11,6 @@ public class SkillView extends EntityView<Skill> {
     }
 
     @Override
-    protected void printAll() {
-
-    }
-
-    @Override
     protected void createEntity() {
 
     }
@@ -38,12 +33,12 @@ public class SkillView extends EntityView<Skill> {
     @NotNull
     @Override
     protected String singularEntityName() {
-        return null;
+        return "skill";
     }
 
     @NotNull
     @Override
     protected String pluralEntityName() {
-        return null;
+        return "skills";
     }
 }

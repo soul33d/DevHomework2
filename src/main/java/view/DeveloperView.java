@@ -14,12 +14,6 @@ public class DeveloperView extends EntityView<Developer> {
     }
 
     @Override
-    protected void printAll() {
-        List<Developer> developers = controller.readAll();
-        developers.forEach(System.out::println);
-    }
-
-    @Override
     protected void createEntity() {
 
     }
@@ -42,12 +36,12 @@ public class DeveloperView extends EntityView<Developer> {
     @NotNull
     @Override
     protected String singularEntityName() {
-        return null;
+        return "developer";
     }
 
     @NotNull
     @Override
     protected String pluralEntityName() {
-        return null;
+        return "developers";
     }
 }

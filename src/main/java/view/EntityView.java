@@ -3,6 +3,8 @@ package view;
 import controller.EntityController;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public abstract class EntityView<T> extends View {
     protected static final int PRINT_ALL_KEY = 1;
     protected static final int PRINT_ENTITY_KEY = 2;
@@ -64,7 +66,15 @@ public abstract class EntityView<T> extends View {
         backToMainMenu = false;
     }
 
-    protected abstract void printAll();
+    protected void printAll() {
+        List<T> tList = controller.readAll();
+        if (tList != null) {
+            tList.forEach(System.out::println);
+            if (tList.isEmpty()) {
+                System.out.printf("There is no %s in your database.", pluralEntityName());
+            }
+        }
+    }
 
     protected void printEntity() {
         System.out.printf("Enter id to print %s details\n", singularEntityName());

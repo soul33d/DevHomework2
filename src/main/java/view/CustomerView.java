@@ -13,17 +13,6 @@ public class CustomerView extends EntityView<Customer> {
     }
 
     @Override
-    protected void printAll() {
-        List<Customer> customers = controller.readAll();
-        if (customers != null) {
-            customers.forEach(System.out::println);
-            if (customers.isEmpty()) {
-                System.out.println("There is no customers in your database.");
-            }
-        }
-    }
-
-    @Override
     protected void createEntity() {
 
     }

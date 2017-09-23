@@ -20,15 +20,6 @@ public class CompanyView extends EntityView<Company> {
     }
 
     @Override
-    protected void printAll() {
-        List<Company> companies = controller.readAll();
-        if (companies != null) {
-            companies.forEach(System.out::println);
-            if (companies.isEmpty()) System.out.println("There is no companies in your database.");
-        }
-    }
-
-    @Override
     protected void createEntity() {
         Company company = new Company();
         company.setName(terminalHelper.readStringFromInput("Enter company name"));

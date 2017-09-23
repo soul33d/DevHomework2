@@ -11,11 +11,6 @@ public class ProjectView extends EntityView<Project> {
     }
 
     @Override
-    protected void printAll() {
-
-    }
-
-    @Override
     protected void createEntity() {
 
     }
@@ -38,12 +33,12 @@ public class ProjectView extends EntityView<Project> {
     @NotNull
     @Override
     protected String singularEntityName() {
-        return null;
+        return "project";
     }
 
     @NotNull
     @Override
     protected String pluralEntityName() {
-        return null;
+        return "projects";
     }
 }
