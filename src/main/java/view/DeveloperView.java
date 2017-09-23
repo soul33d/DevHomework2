@@ -23,16 +23,6 @@ public class DeveloperView extends EntityView<Developer> {
 
     }
 
-    @Override
-    protected void deleteEntity() {
-
-    }
-
-    @Override
-    protected void deleteAll() {
-
-    }
-
     @NotNull
     @Override
     protected String singularEntityName() {

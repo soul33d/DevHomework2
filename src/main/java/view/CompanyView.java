@@ -46,35 +46,6 @@ public class CompanyView extends EntityView<Company> {
         }
     }
 
-    @Override
-    protected void deleteEntity() {
-        printAll();
-        int enteredInteger = terminalHelper.readIntFromInput("Enter id to delete company or '0' to complete.");
-        if (enteredInteger != 0) {
-            controller.delete(enteredInteger);
-            deleteEntity();
-        }
-    }
-
-    @Override
-    protected void deleteAll() {
-        String answer = terminalHelper.readStringFromInput
-                ("Are you sure you want to delete all companies? y/n");
-        switch (answer) {
-            case "y":
-                if (controller.deleteAll()) {
-                    System.out.println("All companies successfully deleted.");
-                }
-                break;
-            case "n":
-                break;
-            default:
-                System.out.printf("There is no action for %s\n", answer);
-                deleteAll();
-                break;
-        }
-    }
-
     @NotNull
     @Override
     protected String singularEntityName() {

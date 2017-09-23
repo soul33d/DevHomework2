@@ -20,16 +20,6 @@ public class ProjectView extends EntityView<Project> {
 
     }
 
-    @Override
-    protected void deleteEntity() {
-
-    }
-
-    @Override
-    protected void deleteAll() {
-
-    }
-
     @NotNull
     @Override
     protected String singularEntityName() {

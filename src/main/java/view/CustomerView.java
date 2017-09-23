@@ -22,16 +22,6 @@ public class CustomerView extends EntityView<Customer> {
 
     }
 
-    @Override
-    protected void deleteEntity() {
-
-    }
-
-    @Override
-    protected void deleteAll() {
-
-    }
-
     @NotNull
     @Override
     protected String singularEntityName() {
