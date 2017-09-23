@@ -66,7 +66,14 @@ public abstract class EntityView<T> extends View {
 
     protected abstract void printAll();
 
-    protected abstract void printEntity();
+    protected void printEntity() {
+        System.out.printf("Enter id to print %s details\n", singularEntityName());
+        int enteredId = terminalHelper.readIntFromInput();
+        T t = controller.read(enteredId);
+        if (t != null) {
+            System.out.println(t);
+        } else System.out.printf("There is no %s with id %d\n", singularEntityName(), enteredId);
+    }
 
     protected abstract void createEntity();
 

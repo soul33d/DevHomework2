@@ -2,6 +2,7 @@ package view;
 
 import controller.EntityController;
 import model.Skill;
+import org.jetbrains.annotations.NotNull;
 
 public class SkillView extends EntityView<Skill> {
 
@@ -10,17 +11,39 @@ public class SkillView extends EntityView<Skill> {
     }
 
     @Override
-    protected void printMenu() {
-
-    }
-
-    @Override
-    protected void selectMenuAction() {
-
-    }
-
-    @Override
     protected void printAll() {
 
+    }
+
+    @Override
+    protected void createEntity() {
+
+    }
+
+    @Override
+    protected void updateEntity() {
+
+    }
+
+    @Override
+    protected void deleteEntity() {
+
+    }
+
+    @Override
+    protected void deleteAll() {
+
+    }
+
+    @NotNull
+    @Override
+    protected String singularEntityName() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    protected String pluralEntityName() {
+        return null;
     }
 }

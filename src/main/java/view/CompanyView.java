@@ -29,15 +29,6 @@ public class CompanyView extends EntityView<Company> {
     }
 
     @Override
-    protected void printEntity() {
-        int enteredId = terminalHelper.readIntFromInput("Enter id to print company details");
-        Company company = controller.read(enteredId);
-        if (company != null) {
-            System.out.println(company);
-        } else System.out.printf("There is no company with id %d\n", enteredId);
-    }
-
-    @Override
     protected void createEntity() {
         Company company = new Company();
         company.setName(terminalHelper.readStringFromInput("Enter company name"));
