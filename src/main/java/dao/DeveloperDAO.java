@@ -45,6 +45,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 "ON pd.project_id = p.id", id, connection));
     }
 
+    @SuppressWarnings("Duplicates")
     private List<Skill> readSkills(int id, Connection connection) {
         List<Skill> skillList = new ArrayList<>();
         try {

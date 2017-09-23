@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class SkillDAO extends EntityDAO<Skill> {
 
+    @SuppressWarnings("Duplicates")
     @Override
     public List<Skill> readAll() throws SQLException {
         List<Skill> skillList = new ArrayList<>();
@@ -22,6 +23,7 @@ public class SkillDAO extends EntityDAO<Skill> {
                 Skill skill = new Skill();
                 skill.setId(rs.getInt("id"));
                 skill.setName(rs.getString("name"));
+                skillList.add(skill);
             }
         }
         return skillList;
