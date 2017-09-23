@@ -81,9 +81,11 @@ public class CompanyView extends EntityView<Company> {
     }
 
     private void printCompany() {
-        int enteredInteger = terminalHelper.readIntFromInput("Enter id to print company details");
-        Company company = controller.read(enteredInteger);
-        System.out.println(company);
+        int enteredId = terminalHelper.readIntFromInput("Enter id to print company details");
+        Company company = controller.read(enteredId);
+        if (company != null) {
+            System.out.println(company);
+        } else System.out.printf("There is no company with id %d\n", enteredId);
     }
 
     private void createCompany() {
