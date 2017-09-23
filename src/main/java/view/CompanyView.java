@@ -161,7 +161,7 @@ public class CompanyView extends EntityView<Company> {
                 case COMPLETE_CREATION_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d", enteredAction);
+                    System.out.printf("There is no action for %d\n", enteredAction);
                     selectMenuAction();
                     break;
             }
@@ -192,7 +192,7 @@ public class CompanyView extends EntityView<Company> {
                 Project project = projectController.read(enteredId);
                 if (project != null) {
                     projects.add(project);
-                    System.out.println(project + "\n Successfully added.");
+                    System.out.println(project + "\n Successfully added. Press '0' to complete.");
                 } else System.out.printf("There is no project with id %d\n", enteredId);
                 enteredId = terminalHelper.readIntFromInput();
             }
@@ -215,7 +215,7 @@ public class CompanyView extends EntityView<Company> {
         @Override
         protected void printMenu() {
             super.printMenu();
-            System.out.printf("Press %d to change company name", CHANGE_NAME_KEY);
+            System.out.printf("Press %d to change company name\n", CHANGE_NAME_KEY);
         }
 
         @Override
@@ -235,7 +235,7 @@ public class CompanyView extends EntityView<Company> {
                 case CHANGE_NAME_KEY:
                     company.setName(terminalHelper.readStringFromInput("Enter new name"));
                 default:
-                    System.out.printf("There is no action for %d", enteredAction);
+                    System.out.printf("There is no action for %d\n", enteredAction);
                     selectMenuAction();
                     break;
             }
