@@ -85,7 +85,7 @@ public abstract class EntityDAO<T> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Company company = new Company();
-                company.setId(rs.getInt(id));
+                company.setId(rs.getInt("id"));
                 company.setName(rs.getString("name"));
                 companyList.add(company);
             }
