@@ -1,7 +1,6 @@
 package view;
 
 import controller.EntityController;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,21 +14,26 @@ public abstract class EntityView<T> extends View {
     protected static final int BACK_TO_MAIN_MENU_KEY = 7;
 
     protected EntityController<T> controller;
+    protected String singularEntityName;
+    protected String pluralEntityName;
     protected boolean backToMainMenu = false;
 
-    public EntityView(EntityController<T> controller, TerminalHelper terminalHelper) {
+    public EntityView(EntityController<T> controller, TerminalHelper terminalHelper, 
+                      String singularEntityName, String pluralEntityName) {
         super(terminalHelper);
         this.controller = controller;
+        this.singularEntityName = singularEntityName;
+        this.pluralEntityName = pluralEntityName;
     }
 
     @Override
     protected void printMenu() {
-        System.out.printf("Press %d to print all %s\n", PRINT_ALL_KEY, pluralEntityName());
-        System.out.printf("Press %d to print %s by id\n", PRINT_ENTITY_KEY, singularEntityName());
-        System.out.printf("Press %d to create new %s\n", CREATE_KEY, singularEntityName());
-        System.out.printf("Press %d to update %s by id\n", UPDATE_KEY, singularEntityName());
-        System.out.printf("Press %d to delete %s by id\n", DELETE_KEY, singularEntityName());
-        System.out.printf("Press %d to delete all %s\n", DELETE_ALL_KEY, pluralEntityName());
+        System.out.printf("Press %d to print all %s\n", PRINT_ALL_KEY, pluralEntityName);
+        System.out.printf("Press %d to print %s by id\n", PRINT_ENTITY_KEY, singularEntityName);
+        System.out.printf("Press %d to create new %s\n", CREATE_KEY, singularEntityName);
+        System.out.printf("Press %d to update %s by id\n", UPDATE_KEY, singularEntityName);
+        System.out.printf("Press %d to delete %s by id\n", DELETE_KEY, singularEntityName);
+        System.out.printf("Press %d to delete all %s\n", DELETE_ALL_KEY, pluralEntityName);
         System.out.printf("Press %d to back to main menu\n", BACK_TO_MAIN_MENU_KEY);
     }
 
@@ -71,18 +75,18 @@ public abstract class EntityView<T> extends View {
         if (tList != null) {
             tList.forEach(System.out::println);
             if (tList.isEmpty()) {
-                System.out.printf("There is no %s in your database.", pluralEntityName());
+                System.out.printf("There is no %s in your database.", pluralEntityName);
             }
         }
     }
 
     protected void printEntity() {
-        System.out.printf("Enter id to print %s details\n", singularEntityName());
+        System.out.printf("Enter id to print %s details\n", singularEntityName);
         int enteredId = terminalHelper.readIntFromInput();
         T t = controller.read(enteredId);
         if (t != null) {
             System.out.println(t);
-        } else System.out.printf("There is no %s with id %d\n", singularEntityName(), enteredId);
+        } else System.out.printf("There is no %s with id %d\n", singularEntityName, enteredId);
     }
 
     protected abstract void createEntity();
@@ -91,7 +95,7 @@ public abstract class EntityView<T> extends View {
 
     protected void deleteEntity() {
         printAll();
-        System.out.printf("Enter id to delete %s or '0' to complete.", singularEntityName());
+        System.out.printf("Enter id to delete %s or '0' to complete.", singularEntityName);
         int enteredInteger = terminalHelper.readIntFromInput();
         if (enteredInteger != 0) {
             controller.delete(enteredInteger);
@@ -101,11 +105,11 @@ public abstract class EntityView<T> extends View {
 
     protected void deleteAll() {
         String answer = terminalHelper.readStringFromInput
-                ("Are you sure you want to delete all " + pluralEntityName() +"? y/n");
+                ("Are you sure you want to delete all " + pluralEntityName +"? y/n");
         switch (answer) {
             case "y":
                 if (controller.deleteAll()) {
-                    System.out.println("All " + pluralEntityName() +" successfully deleted.");
+                    System.out.println("All " + pluralEntityName +" successfully deleted.");
                 }
                 break;
             case "n":
@@ -116,10 +120,4 @@ public abstract class EntityView<T> extends View {
                 break;
         }
     }
-
-    @NotNull
-    protected abstract String singularEntityName();
-
-    @NotNull
-    protected abstract String pluralEntityName();
 }

@@ -2,14 +2,11 @@ package view;
 
 import controller.EntityController;
 import model.Developer;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class DeveloperView extends EntityView<Developer> {
 
     public DeveloperView(EntityController<Developer> controller, TerminalHelper terminalHelper) {
-        super(controller, terminalHelper);
+        super(controller, terminalHelper, "developer", "developers");
         this.controller = controller;
     }
 
@@ -21,17 +18,5 @@ public class DeveloperView extends EntityView<Developer> {
     @Override
     protected void updateEntity() {
 
-    }
-
-    @NotNull
-    @Override
-    protected String singularEntityName() {
-        return "developer";
-    }
-
-    @NotNull
-    @Override
-    protected String pluralEntityName() {
-        return "developers";
     }
 }
