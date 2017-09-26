@@ -107,9 +107,9 @@ public class DeveloperView extends EntityView<Developer> {
         @Override
         protected void printMenu() {
             super.printMenu();
-            System.out.printf("Press %d to change first name", CHANGE_FIRST_NAME_KEY);
-            System.out.printf("Press %d to change last name", CHANGE_LAST_NAME_KEY);
-            System.out.printf("Press %d to change salary", CHANGE_SALARY_KEY);
+            System.out.printf("Press %d to change first name\n", CHANGE_FIRST_NAME_KEY);
+            System.out.printf("Press %d to change last name\n", CHANGE_LAST_NAME_KEY);
+            System.out.printf("Press %d to change salary\n", CHANGE_SALARY_KEY);
         }
 
         @Override

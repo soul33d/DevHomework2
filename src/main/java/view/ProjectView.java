@@ -47,10 +47,10 @@ public class ProjectView extends EntityView<Project> {
 
         @Override
         protected void printMenu() {
-            System.out.printf("Press %d to complete", COMPLETE_KEY);
-            System.out.printf("Press %d to add companies", ADD_COMPANIES_KEY);
-            System.out.printf("Press %d to add developers", ADD_DEVELOPERS_KEY);
-            System.out.printf("Press %d to add customers", ADD_CUSTOMERS_KEY);
+            System.out.printf("Press %d to complete\n", COMPLETE_KEY);
+            System.out.printf("Press %d to add companies\n", ADD_COMPANIES_KEY);
+            System.out.printf("Press %d to add developers\n", ADD_DEVELOPERS_KEY);
+            System.out.printf("Press %d to add customers\n", ADD_CUSTOMERS_KEY);
         }
 
         @Override
