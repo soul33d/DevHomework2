@@ -26,20 +26,7 @@ public class CompanyView extends EntityView<Company> {
 
     @Override
     protected void updateEntity() {
-        printAll();
-        Company company;
-        int enteredId = terminalHelper.readIntFromInput("Enter id of company to update or '0' to complete");
-        if (enteredId != 0) {
-            company = controller.read(enteredId);
-            if (company != null) {
-                updateView.setCompany(company);
-                updateView.execute();
-                controller.update(company);
-            } else {
-                System.out.printf("There is no company with id %d\n", enteredId);
-            }
-            updateEntity();
-        }
+        updateEntity(updateView, updateView::setCompany);
     }
 
     private class CreateView extends View {

@@ -4,6 +4,7 @@ import controller.EntityController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class EntityView<T> extends View {
     protected static final int PRINT_ALL_KEY = 1;
@@ -125,17 +126,35 @@ public abstract class EntityView<T> extends View {
     protected <E> List<E> readRelationalEntitiesFromInput(Class<E> clazz) {
         EntityController<E> entityController = controller.getEntityController(clazz);
         entityController.readAll().forEach(System.out::println);
-        String entityName = clazz.getName().toLowerCase();
-        int enteredId = terminalHelper.readIntFromInput("Enter id to add " + entityName + " or enter '0' to complete");
+        int enteredId = terminalHelper.readIntFromInput("Enter id to add " + singularEntityName + " or enter '0' to complete");
         List<E> entities = new ArrayList<>();
         while (enteredId != 0) {
             E e = entityController.read(enteredId);
             if (e != null) {
                 entities.add(e);
                 System.out.println(e + "\n Successfully added. Press '0' to complete.");
-            } else System.out.printf("There is no " + entityName + " with id %d\n", enteredId);
+            } else System.out.printf("There is no " + singularEntityName + " with id %d\n", enteredId);
             enteredId = terminalHelper.readIntFromInput();
         }
         return entities;
     }
+
+    protected void updateEntity(View updateView, Consumer<T> consumer) {
+        printAll();
+        T t;
+        int enteredId = terminalHelper.readIntFromInput("Enter id of " + singularEntityName + " to update or '0' to complete");
+        if (enteredId != 0) {
+            t = controller.read(enteredId);
+            if (t != null) {
+                consumer.accept(t);
+                updateView.execute();
+                controller.update(t);
+            } else {
+                System.out.printf("There is no " + singularEntityName + " with id %d\n", enteredId);
+            }
+            updateEntity();
+        }
+    }
+
+
 }

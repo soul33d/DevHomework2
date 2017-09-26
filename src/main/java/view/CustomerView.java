@@ -26,20 +26,7 @@ public class CustomerView extends EntityView<Customer> {
 
     @Override
     protected void updateEntity() {
-        printAll();
-        Customer customer;
-        int enteredId = terminalHelper.readIntFromInput("Enter id of customer to update or '0' to complete");
-        if (enteredId != 0) {
-            customer = controller.read(enteredId);
-            if (customer != null) {
-                updateView.setCustomer(customer);
-                updateView.execute();
-                controller.update(customer);
-            } else {
-                System.out.printf("There is no customer with id %d\n", enteredId);
-            }
-            updateEntity();
-        }
+        updateEntity(updateView, updateView::setCustomer);
     }
 
     private class CreateView extends View {
