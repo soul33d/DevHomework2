@@ -126,14 +126,15 @@ public abstract class EntityView<T> extends View {
     protected <E> List<E> readRelationalEntitiesFromInput(Class<E> clazz) {
         EntityController<E> entityController = controller.getEntityController(clazz);
         entityController.readAll().forEach(System.out::println);
-        int enteredId = terminalHelper.readIntFromInput("Enter id to add " + singularEntityName + " or enter '0' to complete");
+        String singularName = clazz.getSimpleName().toLowerCase();
+        int enteredId = terminalHelper.readIntFromInput("Enter id to add " + singularName + " or enter '0' to complete");
         List<E> entities = new ArrayList<>();
         while (enteredId != 0) {
             E e = entityController.read(enteredId);
             if (e != null) {
                 entities.add(e);
                 System.out.println(e + "\n Successfully added. Press '0' to complete.");
-            } else System.out.printf("There is no " + singularEntityName + " with id %d\n", enteredId);
+            } else System.out.printf("There is no " + singularName + " with id %d\n", enteredId);
             enteredId = terminalHelper.readIntFromInput();
         }
         return entities;
