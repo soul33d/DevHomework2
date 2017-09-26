@@ -23,6 +23,7 @@ public class SkillDAO extends EntityDAO<Skill> {
                 Skill skill = new Skill();
                 skill.setId(rs.getInt("id"));
                 skill.setName(rs.getString("name"));
+                readAllRelationalEntities(skill, connection);
                 skillList.add(skill);
             }
         }
