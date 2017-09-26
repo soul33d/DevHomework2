@@ -20,7 +20,7 @@ public class SkillView extends EntityView<Skill> {
         skill.setName(terminalHelper.readStringFromInput("Enter skill name"));
         createView.setSkill(skill);
         createView.execute();
-        controller.update(skill);
+        controller.write(skill);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class SkillView extends EntityView<Skill> {
 
         @Override
         protected void printMenu() {
-            System.out.printf("Press %d to complete", COMPLETE_KEY);
-            System.out.printf("Press %d to add developers", ADD_DEVELOPERS_KEY);
+            System.out.printf("Press %d to complete\n", COMPLETE_KEY);
+            System.out.printf("Press %d to add developers\n", ADD_DEVELOPERS_KEY);
         }
 
         @Override
@@ -78,7 +78,7 @@ public class SkillView extends EntityView<Skill> {
         @Override
         protected void printMenu() {
             super.printMenu();
-            System.out.printf("Press %d to change name", CHANGE_NAME_KEY);
+            System.out.printf("Press %d to change name\n", CHANGE_NAME_KEY);
         }
 
         @Override
