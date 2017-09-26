@@ -93,8 +93,8 @@ public class ProjectView extends EntityView<Project> {
     }
 
     private class UpdateView extends CreateView {
-        public static final int CHANGE_NAME_KEY = 4;
-        public static final int CHANGE_COST_KEY = 5;
+        protected static final int CHANGE_NAME_KEY = 4;
+        protected static final int CHANGE_COST_KEY = 5;
 
         public UpdateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
@@ -133,7 +133,6 @@ public class ProjectView extends EntityView<Project> {
                     System.out.printf("There is no action for %d", enteredAction);
                     selectMenuAction();
                     break;
-
             }
         }
     }
