@@ -98,11 +98,11 @@ public class CompanyView extends EntityView<Company> {
             int enteredAction = terminalHelper.readIntFromInput();
             switch (enteredAction) {
                 case ADD_DEVELOPERS_KEY:
-                    System.out.println("After completing previous developers will be cleared!");
+                    printAlertUpdateMessage("developers");
                     addDevelopers();
                     break;
                 case ADD_PROJECTS_KEY:
-                    System.out.println("After completing previous projects will be cleared!");
+                    printAlertUpdateMessage("projects");
                     addProjects();
                     break;
                 case COMPLETE_CREATION_KEY:

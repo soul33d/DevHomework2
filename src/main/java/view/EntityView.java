@@ -157,4 +157,7 @@ public abstract class EntityView<T> extends View {
     }
 
 
+    protected void printAlertUpdateMessage(String pluralName) {
+        System.out.println("After completing previous " + pluralName + " will be cleared!");
+    }
 }

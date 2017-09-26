@@ -90,14 +90,14 @@ public class CustomerView extends EntityView<Customer> {
             int enteredAction = terminalHelper.readIntFromInput();
             switch (enteredAction) {
                 case ADD_PROJECTS_KEY:
-                    System.out.println("After completing previous projects will be cleared!");
+                    printAlertUpdateMessage("projects");
                     addProjects();
                     break;
                 case CHANGE_FIRST_NAME_KEY:
                     customer.setFirstName(terminalHelper.readStringFromInput("Enter new first name"));
                     break;
                 case CHANGE_LAST_NAME_KEY:
-                    customer.setLastName("Enter new last name");
+                    customer.setLastName(terminalHelper.readStringFromInput("Enter new last name"));
                     break;
                 case COMPLETE_KEY:
                     break;
