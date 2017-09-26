@@ -5,9 +5,6 @@ import model.Company;
 import model.Developer;
 import model.Project;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CompanyView extends EntityView<Company> {
     private CreateView createView;
     private UpdateView updateView;
@@ -83,35 +80,11 @@ public class CompanyView extends EntityView<Company> {
         }
 
         void addDevelopers() {
-            EntityController<Developer> developerController = controller.getEntityController(Developer.class);
-            developerController.readAll().forEach(System.out::println);
-            int enteredId = terminalHelper.readIntFromInput("Enter id to add developer or enter '0' to complete");
-            List<Developer> developers = new ArrayList<>();
-            while (enteredId != 0) {
-                Developer developer = developerController.read(enteredId);
-                if (developer != null) {
-                    developers.add(developer);
-                    System.out.println(developer + "\n Successfully added. Press '0' to complete.");
-                } else System.out.printf("There is no developer with id %d\n", enteredId);
-                enteredId = terminalHelper.readIntFromInput();
-            }
-            company.setDevelopers(developers);
+            company.setDevelopers(readRelationalEntitiesFromInput(Developer.class));
         }
 
         void addProjects() {
-            EntityController<Project> projectController = controller.getEntityController(Project.class);
-            projectController.readAll().forEach(System.out::println);
-            int enteredId = terminalHelper.readIntFromInput("Enter id to add project or enter '0' to complete");
-            List<Project> projects = new ArrayList<>();
-            while (enteredId != 0) {
-                Project project = projectController.read(enteredId);
-                if (project != null) {
-                    projects.add(project);
-                    System.out.println(project + "\n Successfully added. Press '0' to complete.");
-                } else System.out.printf("There is no project with id %d\n", enteredId);
-                enteredId = terminalHelper.readIntFromInput();
-            }
-            company.setProjects(projects);
+            company.setProjects(readRelationalEntitiesFromInput(Project.class));
         }
 
         public void setCompany(Company company) {

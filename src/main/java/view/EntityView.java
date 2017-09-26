@@ -2,6 +2,7 @@ package view;
 
 import controller.EntityController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityView<T> extends View {
@@ -18,7 +19,7 @@ public abstract class EntityView<T> extends View {
     protected String pluralEntityName;
     protected boolean backToMainMenu = false;
 
-    public EntityView(EntityController<T> controller, TerminalHelper terminalHelper, 
+    public EntityView(EntityController<T> controller, TerminalHelper terminalHelper,
                       String singularEntityName, String pluralEntityName) {
         super(terminalHelper);
         this.controller = controller;
@@ -105,11 +106,11 @@ public abstract class EntityView<T> extends View {
 
     protected void deleteAll() {
         String answer = terminalHelper.readStringFromInput
-                ("Are you sure you want to delete all " + pluralEntityName +"? y/n");
+                ("Are you sure you want to delete all " + pluralEntityName + "? y/n");
         switch (answer) {
             case "y":
                 if (controller.deleteAll()) {
-                    System.out.println("All " + pluralEntityName +" successfully deleted.");
+                    System.out.println("All " + pluralEntityName + " successfully deleted.");
                 }
                 break;
             case "n":
@@ -119,5 +120,22 @@ public abstract class EntityView<T> extends View {
                 deleteAll();
                 break;
         }
+    }
+
+    protected <E> List<E> readRelationalEntitiesFromInput(Class<E> clazz) {
+        EntityController<E> entityController = controller.getEntityController(clazz);
+        entityController.readAll().forEach(System.out::println);
+        String entityName = clazz.getName().toLowerCase();
+        int enteredId = terminalHelper.readIntFromInput("Enter id to add " + entityName + " or enter '0' to complete");
+        List<E> entities = new ArrayList<>();
+        while (enteredId != 0) {
+            E e = entityController.read(enteredId);
+            if (e != null) {
+                entities.add(e);
+                System.out.println(e + "\n Successfully added. Press '0' to complete.");
+            } else System.out.printf("There is no " + entityName + " with id %d\n", enteredId);
+            enteredId = terminalHelper.readIntFromInput();
+        }
+        return entities;
     }
 }
