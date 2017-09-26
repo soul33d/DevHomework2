@@ -69,7 +69,7 @@ public class ProjectView extends EntityView<Project> {
                 case COMPLETE_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d\n", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
@@ -130,7 +130,7 @@ public class ProjectView extends EntityView<Project> {
                     project.setCost(new BigDecimal(terminalHelper.readDoubleFromInput("Enter new cost")));
                     break;
                 default:
-                    System.out.printf("There is no action for %d", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }

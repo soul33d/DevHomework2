@@ -55,7 +55,7 @@ public class CustomerView extends EntityView<Customer> {
                 case COMPLETE_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d\n", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
@@ -102,7 +102,7 @@ public class CustomerView extends EntityView<Customer> {
                 case COMPLETE_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d\n", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }

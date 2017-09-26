@@ -160,4 +160,8 @@ public abstract class EntityView<T> extends View {
     protected void printAlertUpdateMessage(String pluralName) {
         System.out.println("After completing previous " + pluralName + " will be cleared!");
     }
+
+    protected void printNoActionKeyMessage(int action) {
+        System.out.printf("There is no action for %d\n", action);
+    }
 }

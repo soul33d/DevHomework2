@@ -60,7 +60,7 @@ public class CompanyView extends EntityView<Company> {
                 case COMPLETE_CREATION_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d\n", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
@@ -112,7 +112,7 @@ public class CompanyView extends EntityView<Company> {
                     System.out.println("Successfully changed.");
                     break;
                 default:
-                    System.out.printf("There is no action for %d\n", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }

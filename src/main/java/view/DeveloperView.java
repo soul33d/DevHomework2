@@ -71,7 +71,7 @@ public class DeveloperView extends EntityView<Developer> {
                 case COMPLETE_KEY:
                     break;
                 default:
-                    System.out.printf("There is no action for %d", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
@@ -137,7 +137,7 @@ public class DeveloperView extends EntityView<Developer> {
                     developer.setSalary(new BigDecimal(terminalHelper.readDoubleFromInput("Enter new salary")));
                     break;
                 default:
-                    System.out.printf("There is no action for %d", enteredAction);
+                    printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
