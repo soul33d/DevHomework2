@@ -34,14 +34,14 @@ public class ProjectView extends EntityView<Project> {
     }
 
     private class CreateView extends View {
-        protected static final int COMPLETE_KEY = 0;
-        protected static final int ADD_COMPANIES_KEY = 1;
-        protected static final int ADD_DEVELOPERS_KEY = 2;
-        protected static final int ADD_CUSTOMERS_KEY = 3;
+        static final int COMPLETE_KEY = 0;
+        static final int ADD_COMPANIES_KEY = 1;
+        static final int ADD_DEVELOPERS_KEY = 2;
+        static final int ADD_CUSTOMERS_KEY = 3;
 
         protected Project project;
 
-        public CreateView(TerminalHelper terminalHelper) {
+        private CreateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -67,12 +67,14 @@ public class ProjectView extends EntityView<Project> {
                     addCustomers();
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
 
         void addCompanies() {
@@ -93,10 +95,10 @@ public class ProjectView extends EntityView<Project> {
     }
 
     private class UpdateView extends CreateView {
-        protected static final int CHANGE_NAME_KEY = 4;
-        protected static final int CHANGE_COST_KEY = 5;
+        private static final int CHANGE_NAME_KEY = 4;
+        private static final int CHANGE_COST_KEY = 5;
 
-        public UpdateView(TerminalHelper terminalHelper) {
+        private UpdateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -129,11 +131,15 @@ public class ProjectView extends EntityView<Project> {
                 case CHANGE_COST_KEY:
                     project.setCost(new BigDecimal(terminalHelper.readDoubleFromInput("Enter new cost")));
                     break;
+                case COMPLETE_KEY:
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
     }
 }

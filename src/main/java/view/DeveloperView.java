@@ -36,14 +36,14 @@ public class DeveloperView extends EntityView<Developer> {
     }
 
     private class CreateView extends View {
-        protected static final int COMPLETE_KEY = 0;
-        protected static final int ADD_SKILL_KEY = 1;
-        protected static final int ADD_COMPANY_KEY = 2;
-        protected static final int ADD_PROJECT_KEY = 3;
+        static final int COMPLETE_KEY = 0;
+        static final int ADD_SKILL_KEY = 1;
+        static final int ADD_COMPANY_KEY = 2;
+        static final int ADD_PROJECT_KEY = 3;
 
         protected Developer developer;
 
-        public CreateView(TerminalHelper terminalHelper) {
+        CreateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -69,12 +69,14 @@ public class DeveloperView extends EntityView<Developer> {
                     addProjects();
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
 
         void addProjects() {
@@ -96,11 +98,11 @@ public class DeveloperView extends EntityView<Developer> {
 
     private class UpdateView extends CreateView {
 
-        public static final int CHANGE_FIRST_NAME_KEY = 4;
-        public static final int CHANGE_LAST_NAME_KEY = 5;
-        public static final int CHANGE_SALARY_KEY = 6;
+        private static final int CHANGE_FIRST_NAME_KEY = 4;
+        private static final int CHANGE_LAST_NAME_KEY = 5;
+        private static final int CHANGE_SALARY_KEY = 6;
 
-        public UpdateView(TerminalHelper terminalHelper) {
+        private UpdateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -136,11 +138,15 @@ public class DeveloperView extends EntityView<Developer> {
                 case CHANGE_SALARY_KEY:
                     developer.setSalary(new BigDecimal(terminalHelper.readDoubleFromInput("Enter new salary")));
                     break;
+                case COMPLETE_KEY:
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
     }
 }

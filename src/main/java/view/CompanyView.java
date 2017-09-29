@@ -58,12 +58,13 @@ public class CompanyView extends EntityView<Company> {
                     addProjects();
                     break;
                 case COMPLETE_CREATION_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
-                    selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
 
         void addDevelopers() {
@@ -106,7 +107,7 @@ public class CompanyView extends EntityView<Company> {
                     addProjects();
                     break;
                 case COMPLETE_CREATION_KEY:
-                    break;
+                    return;
                 case CHANGE_NAME_KEY:
                     company.setName(terminalHelper.readStringFromInput("Enter new name"));
                     System.out.println("Successfully changed.");
@@ -116,6 +117,8 @@ public class CompanyView extends EntityView<Company> {
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
     }
 }

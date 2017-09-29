@@ -35,7 +35,7 @@ public class CustomerView extends EntityView<Customer> {
 
         Customer customer;
 
-        public CreateView(TerminalHelper terminalHelper) {
+        CreateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -53,12 +53,14 @@ public class CustomerView extends EntityView<Customer> {
                     addProjects();
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
 
         void addProjects() {
@@ -71,10 +73,10 @@ public class CustomerView extends EntityView<Customer> {
     }
 
     private class UpdateView extends CreateView {
-        public static final int CHANGE_FIRST_NAME_KEY = 2;
-        public static final int CHANGE_LAST_NAME_KEY = 3;
+        private static final int CHANGE_FIRST_NAME_KEY = 2;
+        private static final int CHANGE_LAST_NAME_KEY = 3;
 
-        public UpdateView(TerminalHelper terminalHelper) {
+        private UpdateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -100,12 +102,14 @@ public class CustomerView extends EntityView<Customer> {
                     customer.setLastName(terminalHelper.readStringFromInput("Enter new last name"));
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
     }
 }

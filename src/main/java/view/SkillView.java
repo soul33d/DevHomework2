@@ -29,10 +29,10 @@ public class SkillView extends EntityView<Skill> {
     }
 
     private class CreateView extends View {
-        protected static final int COMPLETE_KEY = 0;
-        protected static final int ADD_DEVELOPERS_KEY = 1;
-        protected Skill skill;
-        public CreateView(TerminalHelper terminalHelper) {
+        static final int COMPLETE_KEY = 0;
+        static final int ADD_DEVELOPERS_KEY = 1;
+        Skill skill;
+        private CreateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -50,28 +50,30 @@ public class SkillView extends EntityView<Skill> {
                     addDevelopers();
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
 
         void addDevelopers() {
             skill.setDevelopers(readRelationalEntitiesFromInput(Developer.class));
         }
 
-        public void setSkill(Skill skill) {
+        void setSkill(Skill skill) {
             this.skill = skill;
         }
     }
 
     private class UpdateView extends CreateView {
 
-        protected static final int CHANGE_NAME_KEY = 2;
+        private static final int CHANGE_NAME_KEY = 2;
 
-        public UpdateView(TerminalHelper terminalHelper) {
+        private UpdateView(TerminalHelper terminalHelper) {
             super(terminalHelper);
         }
 
@@ -93,12 +95,14 @@ public class SkillView extends EntityView<Skill> {
                     skill.setName(terminalHelper.readStringFromInput("Enter new name"));
                     break;
                 case COMPLETE_KEY:
-                    break;
+                    return;
                 default:
                     printNoActionKeyMessage(enteredAction);
                     selectMenuAction();
                     break;
             }
+            printMenu();
+            selectMenuAction();
         }
     }
 }

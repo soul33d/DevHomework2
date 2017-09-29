@@ -18,7 +18,6 @@ public abstract class EntityView<T> extends View {
     protected EntityController<T> controller;
     protected String singularEntityName;
     protected String pluralEntityName;
-    protected boolean backToMainMenu = false;
 
     public EntityView(EntityController<T> controller, TerminalHelper terminalHelper,
                       String singularEntityName, String pluralEntityName) {
@@ -62,14 +61,13 @@ public abstract class EntityView<T> extends View {
                 deleteAll();
                 break;
             case BACK_TO_MAIN_MENU_KEY:
-                backToMainMenu = true;
+                return;
+            default:
+                printNoActionKeyMessage(enteredInteger);
                 break;
         }
-        if (!backToMainMenu) {
-            printMenu();
-            selectMenuAction();
-        }
-        backToMainMenu = false;
+        printMenu();
+        selectMenuAction();
     }
 
     protected void printAll() {
