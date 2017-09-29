@@ -10,14 +10,13 @@ import java.util.Map;
 public class AppController {
     private Map<Class, EntityController> controllers;
 
-    @SuppressWarnings("unchecked")
     public AppController() {
         controllers = new HashMap<>();
-        controllers.put(Developer.class, new EntityController(this, new DeveloperDAO()));
-        controllers.put(Skill.class, new EntityController(this, new SkillDAO()));
-        controllers.put(Company.class, new EntityController(this, new CompanyDAO()));
-        controllers.put(Project.class, new EntityController(this, new ProjectDAO()));
-        controllers.put(Customer.class, new EntityController(this, new CustomerDAO()));
+        controllers.put(Developer.class, new EntityController<>(this, new DeveloperDAO()));
+        controllers.put(Skill.class, new EntityController<>(this, new SkillDAO()));
+        controllers.put(Company.class, new EntityController<>(this, new CompanyDAO()));
+        controllers.put(Project.class, new EntityController<>(this, new ProjectDAO()));
+        controllers.put(Customer.class, new EntityController<>(this, new CustomerDAO()));
     }
 
     @SuppressWarnings("unchecked")
