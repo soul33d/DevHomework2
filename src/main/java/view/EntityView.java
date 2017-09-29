@@ -98,7 +98,9 @@ public abstract class EntityView<T> extends View {
         System.out.printf("Enter id to delete %s or '0' to complete.\n", singularEntityName);
         int enteredInteger = terminalHelper.readIntFromInput();
         if (enteredInteger != 0) {
-            controller.delete(enteredInteger);
+            if (controller.delete(enteredInteger)) {
+                System.out.println("Deleted successfully");
+            } else System.out.printf("There is no %s with id %d\n", singularEntityName, enteredInteger);
             deleteEntity();
         }
     }
