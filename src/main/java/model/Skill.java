@@ -57,9 +57,9 @@ public class Skill {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Skill{");
-        sb.append("id=").append(id).append(", name='").append(name).append("\'\n");
+        sb.append("id=").append(id).append(", name='").append(name).append("\'");
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\t").append(developer).append(";\n"));
+            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
         }
         sb.append('}');
         return  sb.toString();

@@ -104,15 +104,15 @@ public class Developer {
         StringBuilder sb = new StringBuilder("Developer{");
         sb.append("id=").append(id).append(", firstName='").append(firstName).append('\'')
                 .append(", lastName='").append(lastName).append('\'')
-                .append(", salary=").append(salary).append("\'\n");
+                .append(", salary=").append(salary).append("\'");
         if (skills != null) {
-            skills.forEach(skill -> sb.append('\t').append(skill).append(";\n"));
+            skills.forEach(skill -> sb.append("\n\t").append(skill).append(";"));
         }
         if (projects != null) {
-            projects.forEach(project -> sb.append('\t').append(project).append(";\n"));
+            projects.forEach(project -> sb.append("\n\t").append(project).append(";"));
         }
         if (companies != null) {
-            companies.forEach(company -> sb.append('\t').append(company).append(";\n"));
+            companies.forEach(company -> sb.append("\n\t").append(company).append(";"));
         }
         sb.append('}');
         return sb.toString();

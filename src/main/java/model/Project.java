@@ -93,15 +93,15 @@ public class Project {
         StringBuilder sb = new StringBuilder("Project{");
         sb.append("id=").append(id)
                 .append(", name='").append(name).append('\'')
-                .append(", cost=").append(cost).append("\"\n");
+                .append(", cost=").append(cost).append("\"");
         if (companies != null) {
-            companies.forEach(company -> sb.append('\t').append(company).append(";\n"));
+            companies.forEach(company -> sb.append("\n\t").append(company).append(";"));
         }
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\t").append(developer).append(";\n"));
+            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
         }
         if (customers != null) {
-            customers.forEach(customer -> sb.append("\t").append(customer).append(";\n"));
+            customers.forEach(customer -> sb.append("\n\t").append(customer).append(";"));
         }
         sb.append('}');
         return  sb.toString();

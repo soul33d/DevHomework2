@@ -79,15 +79,15 @@ public class Company {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Company{id=");
-        sb.append(id).append(", name='").append(name).append("\'\n");
+        sb.append(id).append(", name='").append(name).append("\'");
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\t").append(developer).append(";\n"));
+            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
         }
         if (projects != null) {
-            projects.forEach(project -> sb.append("\t").append(project).append(";\n"));
+            projects.forEach(project -> sb.append("\n\t").append(project).append(";"));
         }
         if (customers != null) {
-            customers.forEach(customer -> sb.append("\t").append(customer).append(";\n"));
+            customers.forEach(customer -> sb.append("\n\t").append(customer).append(";"));
         }
         sb.append("}");
         return sb.toString();
