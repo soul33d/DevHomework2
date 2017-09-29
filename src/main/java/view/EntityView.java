@@ -13,7 +13,7 @@ public abstract class EntityView<T> extends View {
     protected static final int UPDATE_KEY = 4;
     protected static final int DELETE_KEY = 5;
     protected static final int DELETE_ALL_KEY = 6;
-    protected static final int BACK_TO_MAIN_MENU_KEY = 7;
+    protected static final int BACK_TO_MAIN_MENU_KEY = 0;
 
     protected EntityController<T> controller;
     protected String singularEntityName;
