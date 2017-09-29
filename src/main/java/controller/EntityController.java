@@ -4,7 +4,7 @@ import dao.EntityDAO;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 public class EntityController<T> {
     private AppController appController;
@@ -19,7 +19,7 @@ public class EntityController<T> {
         return appController.getEntityController(clazz);
     }
 
-    public List<T> readAll() {
+    public Set<T> readAll() {
         try {
             return entityDAO.readAll();
         } catch (SQLException e) {

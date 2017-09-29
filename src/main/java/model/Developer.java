@@ -3,7 +3,7 @@ package model;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 public class Developer {
     private int id;
@@ -12,11 +12,11 @@ public class Developer {
     private BigDecimal salary;
 
     @Nullable
-    private List<Skill> skills;
+    private Set<Skill> skills;
     @Nullable
-    private List<Project> projects;
+    private Set<Project> projects;
     @Nullable
-    private List<Company> companies;
+    private Set<Company> companies;
 
     public int getId() {
         return id;
@@ -51,30 +51,52 @@ public class Developer {
     }
 
     @Nullable
-    public List<Skill> getSkills() {
+    public Set<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(@Nullable List<Skill> skills) {
+    public void setSkills(@Nullable Set<Skill> skills) {
         this.skills = skills;
     }
 
     @Nullable
-    public List<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(@Nullable List<Project> projects) {
+    public void setProjects(@Nullable Set<Project> projects) {
         this.projects = projects;
     }
 
     @Nullable
-    public List<Company> getCompanies() {
+    public Set<Company> getCompanies() {
         return companies;
     }
 
-    public void setCompanies(@Nullable List<Company> companies) {
+    public void setCompanies(@Nullable Set<Company> companies) {
         this.companies = companies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Developer developer = (Developer) o;
+
+        if (id != developer.id) return false;
+        if (!firstName.equals(developer.firstName)) return false;
+        if (!lastName.equals(developer.lastName)) return false;
+        return salary.equals(developer.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + salary.hashCode();
+        return result;
     }
 
     @Override

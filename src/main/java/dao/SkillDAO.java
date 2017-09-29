@@ -6,16 +6,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SkillDAO extends EntityDAO<Skill> {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public List<Skill> readAll() throws SQLException {
-        List<Skill> skillList = new ArrayList<>();
+    public Set<Skill> readAll() throws SQLException {
+        Set<Skill> skillSet = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM skills");
@@ -24,10 +24,10 @@ public class SkillDAO extends EntityDAO<Skill> {
                 skill.setId(rs.getInt("id"));
                 skill.setName(rs.getString("name"));
                 readAllRelationalEntities(skill, connection);
-                skillList.add(skill);
+                skillSet.add(skill);
             }
         }
-        return skillList;
+        return skillSet;
     }
 
     @Override
@@ -73,11 +73,11 @@ public class SkillDAO extends EntityDAO<Skill> {
     }
 
     private void setRelationships(@NotNull Skill skill, Connection connection) throws SQLException {
-        List<Developer> developers = skill.getDevelopers();
+        Set<Developer> developers = skill.getDevelopers();
         if (developers != null) {
             setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)", skill.getId(),
                     false,
-                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+                    developers.stream().map(Developer::getId).collect(Collectors.toSet()), connection);
         }
     }
 

@@ -2,7 +2,7 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Set;
 
 public class Customer {
     private int id;
@@ -10,9 +10,9 @@ public class Customer {
     private String lastName;
 
     @Nullable
-    private List<Company> companies;
+    private Set<Company> companies;
     @Nullable
-    private List<Project> projects;
+    private Set<Project> projects;
 
     public int getId() {
         return id;
@@ -39,21 +39,41 @@ public class Customer {
     }
 
     @Nullable
-    public List<Company> getCompanies() {
+    public Set<Company> getCompanies() {
         return companies;
     }
 
-    public void setCompanies(@Nullable List<Company> companies) {
+    public void setCompanies(@Nullable Set<Company> companies) {
         this.companies = companies;
     }
 
     @Nullable
-    public List<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(@Nullable List<Project> projects) {
+    public void setProjects(@Nullable Set<Project> projects) {
         this.projects = projects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
+        if (id != customer.id) return false;
+        if (!firstName.equals(customer.firstName)) return false;
+        return lastName.equals(customer.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        return result;
     }
 
     @Override

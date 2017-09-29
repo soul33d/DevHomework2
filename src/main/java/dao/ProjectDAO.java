@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProjectDAO extends EntityDAO<Project> {
     @Override
-    public List<Project> readAll() throws SQLException {
-        List<Project> projectList = new ArrayList<>();
+    public Set<Project> readAll() throws SQLException {
+        Set<Project> projectSet = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM projects");
@@ -25,10 +25,10 @@ public class ProjectDAO extends EntityDAO<Project> {
                 project.setName(rs.getString("name"));
                 project.setCost(rs.getBigDecimal("cost"));
                 readAllRelationalEntities(project, connection);
-                projectList.add(project);
+                projectSet.add(project);
             }
         }
-        return projectList;
+        return projectSet;
     }
 
     @Override
@@ -84,23 +84,23 @@ public class ProjectDAO extends EntityDAO<Project> {
     }
 
     private void setRelationships(@NotNull Project project, Connection connection) throws SQLException {
-        List<Company> companies = project.getCompanies();
+        Set<Company> companies = project.getCompanies();
         if (companies != null) {
             setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)", project.getId(),
                     false,
-                    companies.stream().map(Company::getId).collect(Collectors.toList()), connection);
+                    companies.stream().map(Company::getId).collect(Collectors.toSet()), connection);
         }
-        List<Developer> developers = project.getDevelopers();
+        Set<Developer> developers = project.getDevelopers();
         if (developers != null) {
             setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)", project.getId(),
                     true,
-                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+                    developers.stream().map(Developer::getId).collect(Collectors.toSet()), connection);
         }
-        List<Customer> customers = project.getCustomers();
+        Set<Customer> customers = project.getCustomers();
         if (customers != null) {
             setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)", project.getId(),
                     false,
-                    customers.stream().map(Customer::getId).collect(Collectors.toList()), connection);
+                    customers.stream().map(Customer::getId).collect(Collectors.toSet()), connection);
         }
     }
 

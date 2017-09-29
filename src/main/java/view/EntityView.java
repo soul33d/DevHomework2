@@ -2,8 +2,8 @@ package view;
 
 import controller.EntityController;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class EntityView<T> extends View {
@@ -71,10 +71,10 @@ public abstract class EntityView<T> extends View {
     }
 
     protected void printAll() {
-        List<T> tList = controller.readAll();
-        if (tList != null) {
-            tList.forEach(System.out::println);
-            if (tList.isEmpty()) {
+        Set<T> tSet = controller.readAll();
+        if (tSet != null) {
+            tSet.forEach(System.out::println);
+            if (tSet.isEmpty()) {
                 System.out.printf("There is no %s in your database.", pluralEntityName);
             }
         }
@@ -121,17 +121,18 @@ public abstract class EntityView<T> extends View {
         }
     }
 
-    protected <E> List<E> readRelationalEntitiesFromInput(Class<E> clazz) {
+    protected <E> Set<E> readRelationalEntitiesFromInput(Class<E> clazz) {
         EntityController<E> entityController = controller.getEntityController(clazz);
         entityController.readAll().forEach(System.out::println);
         String singularName = clazz.getSimpleName().toLowerCase();
         int enteredId = terminalHelper.readIntFromInput("Enter id to add " + singularName + " or enter '0' to complete");
-        List<E> entities = new ArrayList<>();
+        Set<E> entities = new HashSet<>();
         while (enteredId != 0) {
             E e = entityController.read(enteredId);
             if (e != null) {
-                entities.add(e);
-                System.out.println(e + "\n Successfully added. Press '0' to complete.");
+                if (entities.add(e)) {
+                    System.out.println(e + "\n Successfully added. Press '0' to complete.");
+                } else System.out.println(e + "\nAlready added.");
             } else System.out.printf("There is no " + singularName + " with id %d\n", enteredId);
             enteredId = terminalHelper.readIntFromInput();
         }

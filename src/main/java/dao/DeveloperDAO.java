@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DeveloperDAO extends EntityDAO<Developer> {
 
     @Override
-    public List<Developer> readAll() throws SQLException {
-        List<Developer> developerList = new ArrayList<>();
+    public Set<Developer> readAll() throws SQLException {
+        Set<Developer> developerSet = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM developers");
@@ -27,10 +27,10 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 developer.setLastName(rs.getString("last_name"));
                 developer.setSalary(rs.getBigDecimal("salary"));
                 readAllRelationalEntities(developer, connection);
-                developerList.add(developer);
+                developerSet.add(developer);
             }
         }
-        return developerList;
+        return developerSet;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class DeveloperDAO extends EntityDAO<Developer> {
     }
 
     @SuppressWarnings("Duplicates")
-    private List<Skill> readSkills(int id, Connection connection) {
-        List<Skill> skillList = new ArrayList<>();
+    private Set<Skill> readSkills(int id, Connection connection) {
+        Set<Skill> skillSet = new HashSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement
                     ("SELECT * FROM skills s JOIN " +
@@ -59,12 +59,12 @@ public class DeveloperDAO extends EntityDAO<Developer> {
                 Skill skill = new Skill();
                 skill.setId(rs.getInt("id"));
                 skill.setName(rs.getString("name"));
-                skillList.add(skill);
+                skillSet.add(skill);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return skillList;
+        return skillSet;
     }
 
     @Nullable
@@ -148,23 +148,23 @@ public class DeveloperDAO extends EntityDAO<Developer> {
     }
 
     private void setRelationships(Developer developer, Connection connection) throws SQLException {
-        List<Skill> skills = developer.getSkills();
+        Set<Skill> skills = developer.getSkills();
         if (skills != null) {
             setRelationships("INSERT INTO developers_skills (developer_id, skill_id) VALUES (?, ?)",
                     developer.getId(), true,
-                    skills.stream().map(Skill::getId).collect(Collectors.toList()), connection);
+                    skills.stream().map(Skill::getId).collect(Collectors.toSet()), connection);
         }
-        List<Project> projects = developer.getProjects();
+        Set<Project> projects = developer.getProjects();
         if (projects != null) {
             setRelationships("INSERT INTO projects_developers (project_id, developer_id) VALUES (?, ?)",
                     developer.getId(), false,
-                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+                    projects.stream().map(Project::getId).collect(Collectors.toSet()), connection);
         }
-        List<Company> companies = developer.getCompanies();
+        Set<Company> companies = developer.getCompanies();
         if (companies != null) {
             setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
                     developer.getId(), false,
-                    companies.stream().map(Company::getId).collect(Collectors.toList()), connection);
+                    companies.stream().map(Company::getId).collect(Collectors.toSet()), connection);
         }
     }
 }

@@ -7,15 +7,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompanyDAO extends EntityDAO<Company> {
 
     @Override
-    public List<Company> readAll() throws SQLException {
-        List<Company> companyList = new ArrayList<>();
+    public Set<Company> readAll() throws SQLException {
+        Set<Company> companySet = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM companies");
@@ -24,10 +24,10 @@ public class CompanyDAO extends EntityDAO<Company> {
                 company.setId(rs.getInt("id"));
                 company.setName(rs.getString("name"));
                 readAllRelationalEntities(company, connection);
-                companyList.add(company);
+                companySet.add(company);
             }
         }
-        return companyList;
+        return companySet;
     }
 
     @Override
@@ -83,17 +83,17 @@ public class CompanyDAO extends EntityDAO<Company> {
     }
 
     private void setRelationships(@NotNull Company company, Connection connection) throws SQLException {
-        List<Developer> developers = company.getDevelopers();
+        Set<Developer> developers = company.getDevelopers();
         if (developers != null) {
             setRelationships("INSERT INTO companies_developers (company_id, developer_id) VALUES (?, ?)",
                     company.getId(), true,
-                    developers.stream().map(Developer::getId).collect(Collectors.toList()), connection);
+                    developers.stream().map(Developer::getId).collect(Collectors.toSet()), connection);
         }
-        List<Project> projects = company.getProjects();
+        Set<Project> projects = company.getProjects();
         if (projects != null) {
             setRelationships("INSERT INTO companies_projects (company_id, project_id) VALUES (?, ?)",
                     company.getId(), true,
-                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+                    projects.stream().map(Project::getId).collect(Collectors.toSet()), connection);
         }
     }
 

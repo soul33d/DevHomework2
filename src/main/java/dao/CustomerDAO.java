@@ -6,15 +6,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CustomerDAO extends EntityDAO<Customer> {
 
     @Override
-    public List<Customer> readAll() throws SQLException {
-        List<Customer> customerList = new ArrayList<>();
+    public Set<Customer> readAll() throws SQLException {
+        Set<Customer> customerSet = new HashSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM customers");
@@ -24,10 +24,10 @@ public class CustomerDAO extends EntityDAO<Customer> {
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
                 readAllRelationalEntities(customer, connection);
-                customerList.add(customer);
+                customerSet.add(customer);
             }
         }
-        return customerList;
+        return customerSet;
     }
 
     @Override
@@ -81,11 +81,11 @@ public class CustomerDAO extends EntityDAO<Customer> {
     }
 
     private void setRelationships(@NotNull Customer customer, Connection connection) throws SQLException {
-        List<Project> projects = customer.getProjects();
+        Set<Project> projects = customer.getProjects();
         if (projects != null) {
             setRelationships("INSERT INTO customers_projects (customer_id, project_id) VALUES (?, ?)",
                     customer.getId(), true,
-                    projects.stream().map(Project::getId).collect(Collectors.toList()), connection);
+                    projects.stream().map(Project::getId).collect(Collectors.toSet()), connection);
         }
     }
 

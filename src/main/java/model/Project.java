@@ -3,7 +3,7 @@ package model;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 public class Project {
     private int id;
@@ -11,11 +11,11 @@ public class Project {
     private BigDecimal cost;
 
     @Nullable
-    private List<Company> companies;
+    private Set<Company> companies;
     @Nullable
-    private List<Developer> developers;
+    private Set<Developer> developers;
     @Nullable
-    private List<Customer> customers;
+    private Set<Customer> customers;
 
     public int getId() {
         return id;
@@ -42,30 +42,50 @@ public class Project {
     }
 
     @Nullable
-    public List<Company> getCompanies() {
+    public Set<Company> getCompanies() {
         return companies;
     }
 
-    public void setCompanies(@Nullable List<Company> companies) {
+    public void setCompanies(@Nullable Set<Company> companies) {
         this.companies = companies;
     }
 
     @Nullable
-    public List<Developer> getDevelopers() {
+    public Set<Developer> getDevelopers() {
         return developers;
     }
 
-    public void setDevelopers(@Nullable List<Developer> developers) {
+    public void setDevelopers(@Nullable Set<Developer> developers) {
         this.developers = developers;
     }
 
     @Nullable
-    public List<Customer> getCustomers() {
+    public Set<Customer> getCustomers() {
         return customers;
     }
 
-    public void setCustomers(@Nullable List<Customer> customers) {
+    public void setCustomers(@Nullable Set<Customer> customers) {
         this.customers = customers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        if (id != project.id) return false;
+        if (!name.equals(project.name)) return false;
+        return cost.equals(project.cost);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + cost.hashCode();
+        return result;
     }
 
     @Override

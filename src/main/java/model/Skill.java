@@ -2,14 +2,14 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Set;
 
 public class Skill {
     private int id;
     private String name;
 
     @Nullable
-    private List<Developer> developers;
+    private Set<Developer> developers;
 
     public int getId() {
         return id;
@@ -28,12 +28,30 @@ public class Skill {
     }
 
     @Nullable
-    public List<Developer> getDevelopers() {
+    public Set<Developer> getDevelopers() {
         return developers;
     }
 
-    public void setDevelopers(@Nullable List<Developer> developers) {
+    public void setDevelopers(@Nullable Set<Developer> developers) {
         this.developers = developers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Skill skill = (Skill) o;
+
+        if (id != skill.id) return false;
+        return name.equals(skill.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override
