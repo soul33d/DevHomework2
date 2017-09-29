@@ -13,6 +13,14 @@ import java.util.Set;
 
 public abstract class EntityDAO<T> {
 
+    private String deleteQuery;
+    private String deleteAllQuery;
+
+    public EntityDAO(String deleteQuery, String deleteAllQuery) {
+        this.deleteQuery = deleteQuery;
+        this.deleteAllQuery = deleteAllQuery;
+    }
+
     private static final String FAILED_TO_DELETE_MSG = "Failed to delete, no rows affected";
 
     public abstract Set<T> readAll() throws SQLException;
@@ -120,7 +128,7 @@ public abstract class EntityDAO<T> {
 
     public void delete(int id) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(deleteQuery());
+            PreparedStatement ps = connection.prepareStatement(deleteQuery);
             ps.setInt(1, id);
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -129,16 +137,12 @@ public abstract class EntityDAO<T> {
         }
     }
 
-    protected abstract String deleteQuery();
-
-    protected abstract String deleteAllQuery();
-
     protected abstract void clearRelationships(int id, Connection connection) throws SQLException;
 
     public void deleteAll() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
-            int affectedRows = statement.executeUpdate(deleteAllQuery());
+            int affectedRows = statement.executeUpdate(deleteAllQuery);
             if (affectedRows == 0) {
                 throw new SQLException(FAILED_TO_DELETE_MSG);
             }

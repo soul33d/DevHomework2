@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
 
 public class DeveloperDAO extends EntityDAO<Developer> {
 
+    public DeveloperDAO() {
+        super("DELETE FROM developers WHERE id = ?", "DELETE FROM developers");
+    }
+
     @Override
     public Set<Developer> readAll() throws SQLException {
         Set<Developer> developerSet = new HashSet<>();
@@ -123,16 +127,6 @@ public class DeveloperDAO extends EntityDAO<Developer> {
             clearRelationships(developer.getId(), connection);
             setRelationships(developer, connection);
         }
-    }
-
-    @Override
-    protected String deleteQuery() {
-        return "DELETE FROM developers WHERE id = ?";
-    }
-
-    @Override
-    protected String deleteAllQuery() {
-        return "DELETE FROM developers";
     }
 
     @Override

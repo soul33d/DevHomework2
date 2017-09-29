@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 
 public class SkillDAO extends EntityDAO<Skill> {
 
+    public SkillDAO() {
+        super("DELETE FROM skills WHERE id = ?", "DELETE FROM skills");
+    }
+
     @SuppressWarnings("Duplicates")
     @Override
     public Set<Skill> readAll() throws SQLException {
@@ -95,16 +99,6 @@ public class SkillDAO extends EntityDAO<Skill> {
             clearRelationships(skill.getId(), connection);
             setRelationships(skill, connection);
         }
-    }
-
-    @Override
-    protected String deleteQuery() {
-        return "DELETE FROM skills WHERE id = ?";
-    }
-
-    @Override
-    protected String deleteAllQuery() {
-        return "DELETE FROM skills";
     }
 
     @Override

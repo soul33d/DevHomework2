@@ -13,6 +13,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProjectDAO extends EntityDAO<Project> {
+    public ProjectDAO() {
+        super("DELETE FROM projects WHERE id = ?", "DELETE FROM projects");
+    }
+
     @Override
     public Set<Project> readAll() throws SQLException {
         Set<Project> projectSet = new HashSet<>();
@@ -119,16 +123,6 @@ public class ProjectDAO extends EntityDAO<Project> {
             clearRelationships(project.getId(), connection);
             setRelationships(project, connection);
         }
-    }
-
-    @Override
-    protected String deleteQuery() {
-        return "DELETE FROM projects WHERE id = ?";
-    }
-
-    @Override
-    protected String deleteAllQuery() {
-        return "DELETE FROM projects";
     }
 
     @Override

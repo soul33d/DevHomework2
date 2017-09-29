@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 
 public class CompanyDAO extends EntityDAO<Company> {
 
+    public CompanyDAO() {
+        super("DELETE FROM companies WHERE id = ?", "DELETE FROM companies");
+    }
+
     @Override
     public Set<Company> readAll() throws SQLException {
         Set<Company> companySet = new HashSet<>();
@@ -109,16 +113,6 @@ public class CompanyDAO extends EntityDAO<Company> {
             clearRelationships(company.getId(), connection);
             setRelationships(company, connection);
         }
-    }
-
-    @Override
-    protected String deleteQuery() {
-        return "DELETE FROM companies WHERE id = ?";
-    }
-
-    @Override
-    protected String deleteAllQuery() {
-        return "DELETE FROM companies";
     }
 
     @Override
