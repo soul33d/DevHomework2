@@ -75,7 +75,7 @@ public abstract class EntityView<T> extends View {
         if (tSet != null) {
             tSet.forEach(System.out::println);
             if (tSet.isEmpty()) {
-                System.out.printf("There is no %s in your database.", pluralEntityName);
+                System.out.printf("There is no %s in your database.\n", pluralEntityName);
             }
         }
     }
