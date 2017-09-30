@@ -113,9 +113,4 @@ public class CustomerDAO extends EntityDAO<Customer> {
     protected void clearRelationships(int id, Connection connection) throws SQLException {
         clearRelationships("DELETE FROM customers_projects WHERE customer_id = ?", id, connection);
     }
-
-    @Override
-    public void deleteAll() throws SQLException {
-
-    }
 }

@@ -131,9 +131,4 @@ public class ProjectDAO extends EntityDAO<Project> {
         clearRelationships("DELETE FROM customers_projects WHERE project_id = ?", id, connection);
         clearRelationships("DELETE FROM projects_developers WHERE project_id = ?", id, connection);
     }
-
-    @Override
-    public void deleteAll() throws SQLException {
-
-    }
 }

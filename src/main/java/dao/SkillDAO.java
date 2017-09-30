@@ -105,9 +105,4 @@ public class SkillDAO extends EntityDAO<Skill> {
     protected void clearRelationships(int id, Connection connection) throws SQLException {
         clearRelationships("DELETE FROM developers_skills WHERE skill_id = ?", id, connection);
     }
-
-    @Override
-    public void deleteAll() throws SQLException {
-
-    }
 }
