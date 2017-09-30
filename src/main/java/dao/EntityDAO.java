@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 
 public abstract class EntityDAO<T> {
@@ -28,7 +28,7 @@ public abstract class EntityDAO<T> {
     protected abstract void readAllRelationalEntities(T t, Connection connection) throws SQLException;
 
     Set<Developer> readDevelopers(String sql, int id, Connection connection) {
-        Set<Developer> developerSet = new HashSet<>();
+        Set<Developer> developerSet = new TreeSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
@@ -48,7 +48,7 @@ public abstract class EntityDAO<T> {
     }
 
     Set<Project> readProjects(String sql, int id, Connection connection) {
-        Set<Project> projectSet = new HashSet<>();
+        Set<Project> projectSet = new TreeSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
@@ -67,7 +67,7 @@ public abstract class EntityDAO<T> {
     }
 
     Set<Customer> readCustomers(String sql, int id, Connection connection) {
-        Set<Customer> customerSet = new HashSet<>();
+        Set<Customer> customerSet = new TreeSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
@@ -86,7 +86,7 @@ public abstract class EntityDAO<T> {
     }
 
     Set<Company> readCompanies(String sql, int id, Connection connection) {
-        Set<Company> companySet = new HashSet<>();
+        Set<Company> companySet = new TreeSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);

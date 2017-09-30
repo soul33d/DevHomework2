@@ -1,10 +1,11 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class Customer {
+public class Customer implements Comparable<Customer> {
     private int id;
     private String firstName;
     private String lastName;
@@ -85,5 +86,10 @@ public class Customer {
         if (projects != null) projects.forEach(p -> sb.append("\n\t").append(p).append(";"));
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Customer o) {
+        return id - o.getId();
     }
 }

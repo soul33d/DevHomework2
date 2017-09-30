@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +18,7 @@ public class CustomerDAO extends EntityDAO<Customer> {
 
     @Override
     public Set<Customer> readAll() throws SQLException {
-        Set<Customer> customerSet = new HashSet<>();
+        Set<Customer> customerSet = new TreeSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM customers");

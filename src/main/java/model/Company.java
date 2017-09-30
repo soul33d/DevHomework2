@@ -1,10 +1,11 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class Company {
+public class Company implements Comparable<Company> {
     private int id;
     private String name;
 
@@ -91,5 +92,10 @@ public class Company {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Company o) {
+        return id - o.getId();
     }
 }

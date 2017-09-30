@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
 
     @Override
     public Set<Developer> readAll() throws SQLException {
-        Set<Developer> developerSet = new HashSet<>();
+        Set<Developer> developerSet = new TreeSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM developers");
@@ -51,7 +51,7 @@ public class DeveloperDAO extends EntityDAO<Developer> {
 
     @SuppressWarnings("Duplicates")
     private Set<Skill> readSkills(int id, Connection connection) {
-        Set<Skill> skillSet = new HashSet<>();
+        Set<Skill> skillSet = new TreeSet<>();
         try {
             PreparedStatement ps = connection.prepareStatement
                     ("SELECT * FROM skills s JOIN " +

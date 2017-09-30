@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,7 @@ public class ProjectDAO extends EntityDAO<Project> {
 
     @Override
     public Set<Project> readAll() throws SQLException {
-        Set<Project> projectSet = new HashSet<>();
+        Set<Project> projectSet = new TreeSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM projects");

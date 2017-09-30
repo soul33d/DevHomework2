@@ -2,7 +2,7 @@ package view;
 
 import controller.EntityController;
 
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -128,7 +128,7 @@ public abstract class EntityView<T> extends View {
         entityController.readAll().forEach(System.out::println);
         String singularName = clazz.getSimpleName().toLowerCase();
         int enteredId = terminalHelper.readIntFromInput("Enter id to add " + singularName + " or enter '0' to complete");
-        Set<E> entities = new HashSet<>();
+        Set<E> entities = new TreeSet<>();
         while (enteredId != 0) {
             E e = entityController.read(enteredId);
             if (e != null) {

@@ -1,10 +1,11 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class Skill {
+public class Skill implements Comparable<Skill> {
     private int id;
     private String name;
 
@@ -63,5 +64,10 @@ public class Skill {
         }
         sb.append('}');
         return  sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Skill o) {
+        return id - o.getId();
     }
 }

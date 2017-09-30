@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,7 @@ public class SkillDAO extends EntityDAO<Skill> {
     @SuppressWarnings("Duplicates")
     @Override
     public Set<Skill> readAll() throws SQLException {
-        Set<Skill> skillSet = new HashSet<>();
+        Set<Skill> skillSet = new TreeSet<>();
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM skills");
