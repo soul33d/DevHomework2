@@ -2,12 +2,20 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
+@Table(name = "skills")
 public class Skill extends BaseEntity {
+
+    @Column(name = "name")
     private String name;
 
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "skills")
     private Set<Developer> developers;
 
     public String getName() {

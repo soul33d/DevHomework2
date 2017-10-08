@@ -2,18 +2,32 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Table(name = "projects")
 public class Project extends BaseEntity {
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
     private Set<Company> companies;
+
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
     private Set<Developer> developers;
+
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
     private Set<Customer> customers;
 
     public String getName() {

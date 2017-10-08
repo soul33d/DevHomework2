@@ -2,15 +2,29 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
+import javax.persistence.*;
 import java.util.Set;
 
+@Table(name = "companies")
 public class Company extends BaseEntity {
+
+    @Column(name = "name")
     private String name;
 
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "companies_developers",
+            joinColumns = {@JoinColumn(name = "company_id")},
+            inverseJoinColumns = {@JoinColumn(name = "developer_id")})
     private Set<Developer> developers;
+
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "companies_projects",
+            joinColumns = {@JoinColumn(name = "company_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
+
     @Nullable
     private Set<Customer> customers;
 

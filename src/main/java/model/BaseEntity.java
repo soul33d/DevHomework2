@@ -2,7 +2,14 @@ package model;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.persistence.*;
+
+@Entity
 public class BaseEntity implements Comparable<BaseEntity> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
 
     public int getId() {

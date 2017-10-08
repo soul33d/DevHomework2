@@ -2,19 +2,38 @@ package model;
 
 import org.jetbrains.annotations.Nullable;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Table(name = "developers")
 public class Developer extends BaseEntity {
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "salary")
     private BigDecimal salary;
 
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "developers_skills",
+            joinColumns = {@JoinColumn(name = "developer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "skill_id")})
     private Set<Skill> skills;
+
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "projects_developers",
+            joinColumns = {@JoinColumn(name = "developer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
+
     @Nullable
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "developers")
     private Set<Company> companies;
 
     public String getFirstName() {
