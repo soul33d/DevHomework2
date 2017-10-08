@@ -1,11 +1,10 @@
-package dao;
+package dao.jdbc;
 
+import dao.IEntityDAO;
 import model.Company;
 import model.Customer;
 import model.Developer;
 import model.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.TreeSet;

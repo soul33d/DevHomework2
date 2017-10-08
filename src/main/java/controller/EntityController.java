@@ -1,6 +1,6 @@
 package controller;
 
-import dao.EntityDAO;
+import dao.jdbc.EntityDAO;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;

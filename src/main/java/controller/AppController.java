@@ -1,6 +1,6 @@
 package controller;
 
-import dao.*;
+import dao.jdbc.*;
 import model.*;
 import org.jetbrains.annotations.NotNull;
 
