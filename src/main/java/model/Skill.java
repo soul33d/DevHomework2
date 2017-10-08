@@ -1,24 +1,14 @@
 package model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class Skill implements Comparable<Skill> {
-    private int id;
+public class Skill extends BaseEntity {
     private String name;
 
     @Nullable
     private Set<Developer> developers;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -63,11 +53,6 @@ public class Skill implements Comparable<Skill> {
             developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
         }
         sb.append('}');
-        return  sb.toString();
-    }
-
-    @Override
-    public int compareTo(@NotNull Skill o) {
-        return id - o.getId();
+        return sb.toString();
     }
 }

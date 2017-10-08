@@ -1,12 +1,10 @@
 package model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class Customer implements Comparable<Customer> {
-    private int id;
+public class Customer extends BaseEntity {
     private String firstName;
     private String lastName;
 
@@ -14,14 +12,6 @@ public class Customer implements Comparable<Customer> {
     private Set<Company> companies;
     @Nullable
     private Set<Project> projects;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -86,10 +76,5 @@ public class Customer implements Comparable<Customer> {
         if (projects != null) projects.forEach(p -> sb.append("\n\t").append(p).append(";"));
         sb.append("}");
         return sb.toString();
-    }
-
-    @Override
-    public int compareTo(@NotNull Customer o) {
-        return id - o.getId();
     }
 }

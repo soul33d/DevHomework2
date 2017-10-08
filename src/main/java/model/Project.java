@@ -1,13 +1,11 @@
 package model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
-public class Project implements Comparable<Project> {
-    private int id;
+public class Project extends BaseEntity {
     private String name;
     private BigDecimal cost;
 
@@ -17,14 +15,6 @@ public class Project implements Comparable<Project> {
     private Set<Developer> developers;
     @Nullable
     private Set<Customer> customers;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -106,10 +96,5 @@ public class Project implements Comparable<Project> {
         }
         sb.append('}');
         return  sb.toString();
-    }
-
-    @Override
-    public int compareTo(@NotNull Project o) {
-        return id - o.getId();
     }
 }

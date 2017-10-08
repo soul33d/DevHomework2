@@ -1,13 +1,11 @@
 package model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
-public class Developer implements Comparable<Developer> {
-    private int id;
+public class Developer extends BaseEntity {
     private String firstName;
     private String lastName;
     private BigDecimal salary;
@@ -18,14 +16,6 @@ public class Developer implements Comparable<Developer> {
     private Set<Project> projects;
     @Nullable
     private Set<Company> companies;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -117,10 +107,5 @@ public class Developer implements Comparable<Developer> {
         }
         sb.append('}');
         return sb.toString();
-    }
-
-    @Override
-    public int compareTo(@NotNull Developer o) {
-        return id - o.getId();
     }
 }
