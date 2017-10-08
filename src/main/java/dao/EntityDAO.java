@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.TreeSet;
 import java.util.Set;
 
-public abstract class EntityDAO<T> {
+public abstract class EntityDAO<T> implements IEntityDAO<T> {
 
     private String deleteQuery;
     private String deleteAllQuery;
@@ -22,8 +22,6 @@ public abstract class EntityDAO<T> {
     }
 
     private static final String FAILED_TO_DELETE_MSG = "Failed to delete, no rows affected";
-
-    public abstract Set<T> readAll() throws SQLException;
 
     protected abstract void readAllRelationalEntities(T t, Connection connection) throws SQLException;
 
@@ -103,11 +101,6 @@ public abstract class EntityDAO<T> {
         return companySet;
     }
 
-    @Nullable
-    public abstract T read(int id) throws SQLException;
-
-    public abstract void write(@NotNull T t) throws SQLException;
-
     void setRelationships
             (String sql, int id, boolean entityIdFirst, Set<Integer> ids, Connection connection) throws SQLException {
         for (Integer relationId : ids) {
@@ -118,14 +111,13 @@ public abstract class EntityDAO<T> {
         }
     }
 
-    public abstract void update(@NotNull T t) throws SQLException;
-
     void clearRelationships(String sql, int id, Connection connection) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
     }
 
+    @Override
     public void delete(int id) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(deleteQuery);
@@ -139,6 +131,7 @@ public abstract class EntityDAO<T> {
 
     protected abstract void clearRelationships(int id, Connection connection) throws SQLException;
 
+    @Override
     public void deleteAll() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection()) {
             Statement statement = connection.createStatement();
