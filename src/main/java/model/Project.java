@@ -1,34 +1,45 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Entity
 @Table(name = "projects")
-public class Project extends BaseEntity {
+public class Project implements Comparable<Project> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     @Column(name = "name")
     private String name;
-
     @Column(name = "cost")
     private BigDecimal cost;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Company> companies;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Developer> developers;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Customer> customers;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -99,16 +110,30 @@ public class Project extends BaseEntity {
         sb.append("id=").append(id)
                 .append(", name='").append(name).append('\'')
                 .append(", cost=").append(cost).append("\"");
-        if (companies != null) {
-            companies.forEach(company -> sb.append("\n\t").append(company).append(";"));
-        }
+        if (companies != null) companies.forEach(c -> sb.append("\n\t")
+                .append("Company{")
+                .append(c.getId()).append(", ")
+                .append(c.getName()).append(c).append("}"));
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
+            developers.forEach(developer -> sb.append("\n\t")
+                    .append("Developer{")
+                    .append(developer.getId()).append(", ")
+                    .append(developer.getFirstName()).append(", ")
+                    .append(developer.getSalary()).append("}"));
         }
         if (customers != null) {
-            customers.forEach(customer -> sb.append("\n\t").append(customer).append(";"));
+            customers.forEach(customer -> sb.append("\n\t")
+                    .append("Customer{")
+                    .append(customer.getId()).append(", ")
+                    .append(customer.getFirstName()).append(", ")
+                    .append(customer.getLastName()).append("}"));
         }
         sb.append('}');
         return  sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Project o) {
+        return id - o.id;
     }
 }

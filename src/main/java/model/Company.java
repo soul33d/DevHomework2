@@ -1,32 +1,47 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Entity
 @Table(name = "companies")
-public class Company extends BaseEntity {
+public class Company implements Comparable<Company> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     @Column(name = "name")
     private String name;
-
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "companies_developers",
             joinColumns = {@JoinColumn(name = "company_id")},
             inverseJoinColumns = {@JoinColumn(name = "developer_id")})
     private Set<Developer> developers;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "companies_projects",
             joinColumns = {@JoinColumn(name = "company_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
 
     @Nullable
+    @Transient
     private Set<Customer> customers;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -86,15 +101,33 @@ public class Company extends BaseEntity {
         StringBuilder sb = new StringBuilder("Company{id=");
         sb.append(id).append(", name='").append(name).append("\'");
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
+            developers.forEach(developer -> sb.append("\n\t")
+                    .append("Developer{")
+                    .append(developer.getId()).append(", ")
+                    .append(developer.getFirstName()).append(", ")
+                    .append(developer.getLastName()).append(", ")
+                    .append(developer.getSalary()).append("}"));
         }
         if (projects != null) {
-            projects.forEach(project -> sb.append("\n\t").append(project).append(";"));
+            projects.forEach(project -> sb.append("\n\t")
+                    .append("Project{")
+                    .append(project.getId()).append(", ")
+                    .append(project.getName()).append(", ")
+                    .append(project.getCost()).append("}"));
         }
         if (customers != null) {
-            customers.forEach(customer -> sb.append("\n\t").append(customer).append(";"));
+            customers.forEach(customer -> sb.append("\n\t")
+                    .append("Customer{")
+                    .append(customer.getId()).append(", ")
+                    .append(customer.getFirstName()).append(", ")
+                    .append(customer.getLastName()).append("}"));
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Company o) {
+        return id - o.id;
     }
 }

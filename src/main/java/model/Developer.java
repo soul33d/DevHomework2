@@ -1,17 +1,23 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Entity
 @Table(name = "developers")
-public class Developer extends BaseEntity {
+public class Developer implements Comparable<Developer> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     @Column(name = "first_name")
     private String firstName;
-
     @Column(name = "last_name")
     private String lastName;
 
@@ -19,22 +25,30 @@ public class Developer extends BaseEntity {
     private BigDecimal salary;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "developers_skills",
             joinColumns = {@JoinColumn(name = "developer_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")})
     private Set<Skill> skills;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "projects_developers",
             joinColumns = {@JoinColumn(name = "developer_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "developers")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "developers", fetch = FetchType.EAGER)
     private Set<Company> companies;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -116,15 +130,31 @@ public class Developer extends BaseEntity {
                 .append(", lastName='").append(lastName).append('\'')
                 .append(", salary=").append(salary).append("\'");
         if (skills != null) {
-            skills.forEach(skill -> sb.append("\n\t").append(skill).append(";"));
+            skills.forEach(skill -> sb.append("\n\t")
+                    .append("Skill{")
+                    .append(skill.getId()).append(", ")
+                    .append(skill.getName()).append(", ")
+                    .append(skill).append("}"));
         }
         if (projects != null) {
-            projects.forEach(project -> sb.append("\n\t").append(project).append(";"));
+            projects.forEach(project -> sb.append("\n\t")
+                    .append("Project{")
+                    .append(project.getId()).append(", ")
+                    .append(project.getName()).append(", ")
+                    .append(project.getCost())
+                    .append("}"));
         }
-        if (companies != null) {
-            companies.forEach(company -> sb.append("\n\t").append(company).append(";"));
-        }
+        if (companies != null) companies.forEach(c -> sb.append("\n\t")
+                .append("Company{")
+                .append(c.getId()).append(", ")
+                .append(c.getName())
+                .append(c).append("}"));
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Developer o) {
+        return id - o.id;
     }
 }

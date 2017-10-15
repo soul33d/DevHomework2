@@ -1,12 +1,18 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import java.util.Set;
-
+@Entity
 @Table(name = "customers")
-public class Customer extends BaseEntity {
+public class Customer implements Comparable<Customer> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -15,14 +21,23 @@ public class Customer extends BaseEntity {
     private String lastName;
 
     @Nullable
+    @Transient
     private Set<Company> companies;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "customers_projects",
             joinColumns = {@JoinColumn(name = "customer_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -83,9 +98,25 @@ public class Customer extends BaseEntity {
         StringBuilder sb = new StringBuilder("Customer{id=");
         sb.append(id).append(", firstName='").append(firstName).append("\'")
                 .append(", lastName='").append(lastName).append("\'");
-        if (companies != null) companies.forEach(c -> sb.append("\n\t").append(c).append(";"));
-        if (projects != null) projects.forEach(p -> sb.append("\n\t").append(p).append(";"));
+        if (companies != null) companies.forEach(c -> sb.append("\n\t")
+                .append("Company{")
+                .append(c.getId()).append(", ")
+                .append(c.getName())
+                .append(c).append("}"));
+        if (projects != null) {
+            projects.forEach(project -> sb.append("\n\t")
+                    .append("Project{")
+                    .append(project.getId()).append(", ")
+                    .append(project.getName()).append(", ")
+                    .append(project.getCost())
+                    .append("}"));
+        }
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Customer o) {
+        return id - o.id;
     }
 }

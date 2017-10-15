@@ -1,22 +1,33 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
+@Entity
 @Table(name = "skills")
-public class Skill extends BaseEntity {
+public class Skill implements Comparable<Skill> {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
     @Column(name = "name")
     private String name;
-
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "skills")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "skills", fetch = FetchType.EAGER)
     private Set<Developer> developers;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -58,9 +69,19 @@ public class Skill extends BaseEntity {
         StringBuilder sb = new StringBuilder("Skill{");
         sb.append("id=").append(id).append(", name='").append(name).append("\'");
         if (developers != null) {
-            developers.forEach(developer -> sb.append("\n\t").append(developer).append(";"));
+            developers.forEach(developer -> sb.append("\n\t")
+                    .append("Developer{")
+                    .append(developer.getId()).append(", ")
+                    .append(developer.getFirstName()).append(", ")
+                    .append(developer.getLastName())
+                    .append(developer.getSalary()).append("}"));
         }
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(@NotNull Skill o) {
+        return id - o.id;
     }
 }
