@@ -25,21 +25,21 @@ public class Developer implements Comparable<Developer> {
     private BigDecimal salary;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "developers_skills",
             joinColumns = {@JoinColumn(name = "developer_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")})
     private Set<Skill> skills;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "projects_developers",
             joinColumns = {@JoinColumn(name = "developer_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
     private Set<Project> projects;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "developers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "developers", fetch = FetchType.EAGER)
     private Set<Company> companies;
 
     public int getId() {

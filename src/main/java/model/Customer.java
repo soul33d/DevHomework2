@@ -25,7 +25,7 @@ public class Customer implements Comparable<Customer> {
     private Set<Company> companies;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "customers_projects",
             joinColumns = {@JoinColumn(name = "customer_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})

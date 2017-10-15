@@ -18,14 +18,14 @@ public class Company implements Comparable<Company> {
     @Column(name = "name")
     private String name;
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "companies_developers",
             joinColumns = {@JoinColumn(name = "company_id")},
             inverseJoinColumns = {@JoinColumn(name = "developer_id")})
     private Set<Developer> developers;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "companies_projects",
             joinColumns = {@JoinColumn(name = "company_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})

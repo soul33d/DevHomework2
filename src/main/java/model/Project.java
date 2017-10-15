@@ -22,15 +22,15 @@ public class Project implements Comparable<Project> {
     private BigDecimal cost;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Company> companies;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Developer> developers;
 
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "projects", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Customer> customers;
 
     public int getId() {

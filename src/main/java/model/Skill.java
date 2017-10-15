@@ -18,7 +18,7 @@ public class Skill implements Comparable<Skill> {
     @Column(name = "name")
     private String name;
     @Nullable
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "skills", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "skills", fetch = FetchType.EAGER)
     private Set<Developer> developers;
 
     public int getId() {
