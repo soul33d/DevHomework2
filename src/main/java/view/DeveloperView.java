@@ -128,6 +128,7 @@ public class DeveloperView extends EntityView<Developer> {
                     break;
                 case ADD_PROJECT_KEY:
                     printAlertUpdateMessage("projects");
+                    addProjects();
                     break;
                 case CHANGE_FIRST_NAME_KEY:
                     developer.setFirstName(terminalHelper.readStringFromInput("Enter new first name"));
