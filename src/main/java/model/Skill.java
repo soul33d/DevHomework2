@@ -73,7 +73,7 @@ public class Skill implements Comparable<Skill> {
                     .append("Developer{")
                     .append(developer.getId()).append(", ")
                     .append(developer.getFirstName()).append(", ")
-                    .append(developer.getLastName())
+                    .append(developer.getLastName()).append(", ")
                     .append(developer.getSalary()).append("}"));
         }
         sb.append('}');

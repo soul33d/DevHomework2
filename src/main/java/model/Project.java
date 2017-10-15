@@ -119,6 +119,7 @@ public class Project implements Comparable<Project> {
                     .append("Developer{")
                     .append(developer.getId()).append(", ")
                     .append(developer.getFirstName()).append(", ")
+                    .append(developer.getLastName()).append(", ")
                     .append(developer.getSalary()).append("}"));
         }
         if (customers != null) {
