@@ -1,16 +1,15 @@
 package controller;
 
-import dao.jdbc.EntityDAO;
+import dao.IEntityDAO;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.Set;
 
 public class EntityController<T> {
     private AppController appController;
-    private EntityDAO<T> entityDAO;
+    private IEntityDAO<T> entityDAO;
 
-    public EntityController(@NotNull AppController appController, @NotNull EntityDAO<T> entityDAO) {
+    public EntityController(@NotNull AppController appController, @NotNull IEntityDAO<T> entityDAO) {
         this.appController = appController;
         this.entityDAO = entityDAO;
     }
@@ -22,7 +21,7 @@ public class EntityController<T> {
     public Set<T> readAll() {
         try {
             return entityDAO.readAll();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -31,7 +30,7 @@ public class EntityController<T> {
     public T read(int id) {
         try {
             return entityDAO.read(id);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -41,7 +40,7 @@ public class EntityController<T> {
         try {
             entityDAO.write(t);
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -51,7 +50,7 @@ public class EntityController<T> {
         try {
             entityDAO.update(t);
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -61,7 +60,7 @@ public class EntityController<T> {
         try {
             entityDAO.delete(id);
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -71,7 +70,7 @@ public class EntityController<T> {
         try {
             entityDAO.deleteAll();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;

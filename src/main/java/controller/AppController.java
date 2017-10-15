@@ -1,6 +1,8 @@
 package controller;
 
-import dao.jdbc.*;
+
+import dao.hibernate.EntityDAO;
+import dao.hibernate.SessionFactorySingleton;
 import model.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +14,11 @@ public class AppController {
 
     public AppController() {
         controllers = new HashMap<>();
-        controllers.put(Developer.class, new EntityController<>(this, new DeveloperDAO()));
-        controllers.put(Skill.class, new EntityController<>(this, new SkillDAO()));
-        controllers.put(Company.class, new EntityController<>(this, new CompanyDAO()));
-        controllers.put(Project.class, new EntityController<>(this, new ProjectDAO()));
-        controllers.put(Customer.class, new EntityController<>(this, new CustomerDAO()));
+        controllers.put(Developer.class, new EntityController<>(this, new EntityDAO<>(Developer.class)));
+        controllers.put(Skill.class, new EntityController<>(this, new EntityDAO<>(Skill.class)));
+        controllers.put(Company.class, new EntityController<>(this, new EntityDAO<>(Company.class)));
+        controllers.put(Project.class, new EntityController<>(this, new EntityDAO<>(Project.class)));
+        controllers.put(Customer.class, new EntityController<>(this, new EntityDAO<>(Customer.class)));
     }
 
     @SuppressWarnings("unchecked")
@@ -25,7 +27,7 @@ public class AppController {
     }
 
     public void closeApp() {
-        ConnectionPool.close();
+        SessionFactorySingleton.getSessionFactory().close();
         System.exit(0);
     }
 }
